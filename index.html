@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monica — Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF8F3;
+    --paper-dim:#F2EEE4;
+    --ink:#1C2430;
+    --ink-soft:#5B6472;
+    --teal:#0E6B63;
+    --teal-dark:#0A4F49;
+    --rust:#B8442E;
+    --rust-bg:#FBEAE6;
+    --amber:#9C6B1E;
+    --amber-bg:#FBF1DD;
+    --purple:#5B3FA8;
+    --purple-bg:#EAE6F7;
+    --steel:#2E5F8A;
+    --steel-bg:#E3EDF5;
+    --line:#DEDACD;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:56px 24px 100px;}
+
+  /* ---------- status line (signature element) ---------- */
+  .status-line{
+    display:flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;letter-spacing:.04em;color:var(--ink-soft);
+    margin-bottom:40px;padding-bottom:14px;border-bottom:1px solid var(--line);
+  }
+  .status-dot{
+    width:8px;height:8px;border-radius:50%;background:var(--teal);
+    box-shadow:0 0 0 0 rgba(14,107,99,.5);
+    animation:pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(14,107,99,.45);}
+    70%{box-shadow:0 0 0 7px rgba(14,107,99,0);}
+    100%{box-shadow:0 0 0 0 rgba(14,107,99,0);}
+  }
+  @media (prefers-reduced-motion: reduce){.status-dot{animation:none;}}
+
+  /* ---------- header ---------- */
+  header{margin-bottom:48px;}
+  .name{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:500;
+    font-size:clamp(38px,6vw,56px);letter-spacing:-.01em;margin:0 0 6px;
+  }
+  .tagline{font-size:16.5px;color:var(--ink-soft);margin:0 0 22px;max-width:620px;}
+  .contact-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .contact-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;
+    display:inline-flex;align-items:center;gap:7px;
+    padding:9px 16px;border:1px solid var(--ink);border-radius:3px;
+    color:var(--ink);text-decoration:none;transition:background .15s,color .15s;
+  }
+  .contact-btn:hover{background:var(--ink);color:var(--paper);}
+
+  /* ---------- table of contents / tabs ---------- */
+  .toc{
+    display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    position:sticky;top:0;background:var(--paper);padding:12px 0;z-index:10;
+    border-bottom:1px solid var(--line);
+  }
+  .toc button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+    background:none;padding:6px 14px;cursor:pointer;
+    border:1px solid var(--line);border-radius:20px;transition:all .15s;
+  }
+  .toc button:hover{border-color:var(--ink);color:var(--ink);}
+  .toc button.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .toc .toc-label{
+    display:flex;align-items:center;color:var(--ink-soft);font-size:11px;
+    letter-spacing:.06em;padding:0 2px;
+  }
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){.tab-panel.active{animation:none;}}
+
+  .subnav{
+    display:flex;flex-wrap:wrap;gap:8px;margin:0 0 36px;
+    padding-bottom:20px;border-bottom:1px dashed var(--line);
+  }
+  .subnav button{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+    background:none;padding:6px 14px;cursor:pointer;
+    border:none;border-bottom:2px solid transparent;transition:all .15s;
+  }
+  .subnav button:hover{color:var(--ink);}
+  .subnav button.active{color:var(--ink);font-weight:600;border-bottom-color:var(--ink);}
+
+  .subpanel{display:none;}
+  .subpanel.active{display:block;animation:fadeIn .2s ease;}
+
+  /* ---------- category group ---------- */
+  .category{margin-bottom:52px;}
+  .category-head{display:flex;align-items:center;gap:10px;margin:0 0 6px;}
+  .cat-dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .cat-dot.health{background:var(--rust);}
+  .cat-dot.tool{background:var(--teal);}
+  .cat-dot.personal{background:var(--amber);}
+  .cat-dot.pm{background:var(--purple);}
+  .cat-dot.strategy{background:var(--steel);}
+  .category-head h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:21px;margin:0;
+  }
+  .category-head .count{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);
+    margin-left:2px;
+  }
+  .category-note{
+    font-size:13px;color:var(--ink-soft);margin:0 0 20px;max-width:600px;
+  }
+
+  /* ---------- project (collapsible card) ---------- */
+  .project{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--rust);
+    border-radius:6px;margin-bottom:16px;overflow:hidden;
+  }
+  .project.tool{border-left-color:var(--teal);}
+  .project.personal{border-left-color:var(--amber);}
+  .project.pm{border-left-color:var(--purple);}
+  .project.strategy{border-left-color:var(--steel);}
+  .project > summary{
+    list-style:none;cursor:pointer;padding:20px 24px;display:block;
+  }
+  .project > summary::-webkit-details-marker{display:none;}
+  .proj-summary-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+  .proj-summary-top h3{font-size:18px;font-weight:600;margin:0;}
+  .proj-badge{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    background:var(--rust-bg);color:var(--rust);
+    padding:3px 9px;border-radius:10px;white-space:nowrap;letter-spacing:.02em;
+  }
+  .project.tool .proj-badge{background:#E4F1EF;color:var(--teal-dark);}
+  .project.personal .proj-badge{background:var(--amber-bg);color:var(--amber);}
+  .project.pm .proj-badge{background:var(--purple-bg);color:var(--purple);}
+  .project.strategy .proj-badge{background:var(--steel-bg);color:var(--steel);}
+  .proj-chevron{
+    font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);font-size:13px;
+    margin-left:auto;
+  }
+  .project[open] .proj-chevron::before{content:"收合 ▾";}
+  .project:not([open]) .proj-chevron::before{content:"展開 ▸";}
+  .proj-oneliner{font-size:13.5px;color:var(--ink-soft);margin:8px 0 12px;max-width:620px;}
+  .proj-tags-preview{display:flex;flex-wrap:wrap;gap:6px;}
+  .proj-tags-preview .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    background:var(--paper-dim);color:var(--ink-soft);
+    padding:3px 8px;border-radius:3px;border:1px solid var(--line);
+  }
+
+  .proj-body{padding:0 24px 24px;border-top:1px solid var(--line);}
+  .proj-body .card-desc{font-size:14.5px;color:var(--ink);margin:18px 0 14px;max-width:640px;}
+
+  .pipeline{
+    display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal-dark);
+    margin-bottom:16px;
+  }
+  .pipeline .step{background:var(--paper-dim);padding:4px 10px;border-radius:4px;}
+  .pipeline .arrow{color:var(--ink-soft);}
+
+  .impact-line{
+    background:var(--paper-dim);border-left:3px solid var(--teal);
+    padding:9px 14px;border-radius:3px;font-size:13.5px;margin-bottom:16px;
+  }
+  .impact-line b{color:var(--teal-dark);}
+
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+  .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:var(--paper-dim);color:var(--ink-soft);
+    padding:4px 9px;border-radius:3px;border:1px solid var(--line);
+  }
+
+  .card-footer{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);}
+
+  .relation-connector{
+    display:flex;align-items:center;gap:10px;margin:-6px 0 14px 20px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);
+  }
+  .relation-connector .bend{
+    width:16px;height:16px;border-left:1.5px solid var(--line);
+    border-bottom:1.5px solid var(--line);border-radius:0 0 0 6px;flex:none;
+  }
+
+  .proj-body h4.subhead{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;
+    color:var(--ink-soft);text-transform:uppercase;margin:20px 0 8px;
+  }
+  .proj-body h4.subhead:first-of-type{margin-top:4px;}
+
+  .scope-table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:13px;}
+  .scope-table td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .scope-table td:first-child{white-space:nowrap;width:1%;}
+  .scope-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;
+    padding:2px 8px;border-radius:9px;display:inline-block;
+  }
+  .scope-price{background:var(--amber-bg);color:var(--amber);}
+  .scope-code{background:var(--rust-bg);color:var(--rust);}
+  .scope-logic{background:#EAE6F7;color:#5B3FA8;}
+  .scope-ops{background:var(--paper-dim);color:var(--ink-soft);}
+
+  details.tech-detail{
+    margin-top:16px;border-top:1px dashed var(--line);padding-top:12px;
+  }
+  details.tech-detail summary{
+    cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    color:var(--teal-dark);font-weight:600;list-style:none;
+  }
+  details.tech-detail summary::-webkit-details-marker{display:none;}
+  details.tech-detail summary::before{content:"▸ ";}
+  details.tech-detail[open] summary::before{content:"▾ ";}
+  details.tech-detail ul{margin:12px 0 0;padding-left:20px;font-size:13.5px;}
+  details.tech-detail li{margin-bottom:7px;}
+  details.tech-detail li b{color:var(--ink);}
+
+  .stat-table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:13px;}
+  .stat-table th{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--ink-soft);text-align:left;
+    padding:6px 8px;border-bottom:1.5px solid var(--ink);
+  }
+  .stat-table td{padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .stat-table td.before{color:var(--rust);}
+  .stat-table td.after{color:var(--teal-dark);font-weight:500;}
+  .stat-table .metric-name{font-weight:600;white-space:nowrap;}
+
+  .limitation-box{
+    background:var(--amber-bg);border:1px solid #E8D5A8;border-radius:5px;
+    padding:14px 16px;margin:0 0 16px;
+  }
+  .limitation-box .lim-title{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;
+    color:var(--amber);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;
+  }
+  .limitation-box ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);}
+  .limitation-box li{margin-bottom:6px;}
+  .limitation-box li:last-child{margin-bottom:0;}
+
+  /* ---------- experience section ---------- */
+  .exp-section{margin-top:64px;padding-top:44px;border-top:1.5px solid var(--ink);}
+  .exp-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:26px;margin:0 0 28px;
+  }
+  .exp-subhead{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 16px;
+  }
+
+  .timeline{margin:0 0 48px;}
+  .timeline-item{position:relative;padding-left:26px;padding-bottom:26px;border-left:2px solid var(--line);margin-left:5px;}
+  .timeline-item:last-child{border-left:2px solid transparent;padding-bottom:0;}
+  .timeline-dot{position:absolute;left:-6.5px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--ink-soft);border:2.5px solid var(--paper);}
+  .timeline-item.current .timeline-dot{background:var(--teal);}
+  .timeline-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin-bottom:2px;}
+  .timeline-role{font-size:16.5px;font-weight:600;}
+  .timeline-role .now-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+    background:#E4F1EF;color:var(--teal-dark);padding:2px 7px;border-radius:8px;margin-left:8px;vertical-align:middle;
+  }
+  .timeline-company{font-size:13.5px;color:var(--ink-soft);margin:2px 0 10px;}
+  .timeline-date{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);white-space:nowrap;}
+  .timeline-body ul{margin:0;padding-left:19px;font-size:13.5px;color:var(--ink);}
+  .timeline-body li{margin-bottom:6px;}
+  .timeline-body li:last-child{margin-bottom:0;}
+  .timeline-note{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0;font-style:italic;}
+
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:48px;}
+  .edu-card{border:1px solid var(--line);border-radius:6px;padding:16px 18px;background:var(--card);}
+  .edu-degree{font-weight:600;font-size:14.5px;margin-bottom:3px;}
+  .edu-school{font-size:13px;color:var(--ink-soft);margin-bottom:6px;}
+  .edu-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);}
+
+  .skill-group{margin-bottom:16px;}
+  .skill-group-label{font-size:13px;color:var(--ink-soft);margin:0 0 8px;font-weight:500;}
+
+  /* ---------- product screenshot mockup ---------- */
+  .mockup-wrap{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:4px 0 20px;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+  .mockup-header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .mockup-header .mh-title{font-size:16px;font-weight:700;}
+  .mockup-header .mh-sub{font-size:10.5px;opacity:.85;margin-top:2px;font-family:'IBM Plex Mono',monospace;}
+  .mockup-header .mh-btns{display:flex;gap:8px;}
+  .mockup-header .mh-btn{font-size:10.5px;background:rgba(255,255,255,.15);padding:5px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.3);}
+  .mockup-body{background:#f8fafc;padding:16px 18px;}
+  .mockup-jql{background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#334155;margin-bottom:14px;overflow-x:auto;white-space:nowrap;}
+  .mockup-stats{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+  .mockup-stat{flex:1;min-width:64px;background:#fff;border:1.5px solid #e2e8f0;border-radius:6px;padding:7px 4px;text-align:center;}
+  .mockup-stat.highlight{border-color:#ef4444;background:#fef2f2;}
+  .mockup-stat .ms-num{font-size:18px;font-weight:700;color:#1e3a8a;line-height:1.2;}
+  .mockup-stat.highlight .ms-num{color:#ef4444;}
+  .mockup-stat .ms-label{font-size:9.5px;color:#64748b;}
+  .mockup-modules{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+  .mockup-tag{font-size:10px;padding:3px 9px;border-radius:12px;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;white-space:nowrap;}
+  .mockup-tag.all{background:#1e3a8a;color:#fff;border-color:#1e3a8a;}
+  .mockup-table-scroll{overflow-x:auto;}
+  .mockup-table{width:100%;min-width:640px;border-collapse:collapse;background:#fff;border-radius:6px;overflow:hidden;font-size:10.5px;}
+  .mockup-table th{background:#f1f5f9;padding:6px 8px;text-align:left;color:#475569;font-weight:600;font-size:9.5px;white-space:nowrap;}
+  .mockup-table td{padding:7px 8px;border-top:1px solid #e2e8f0;vertical-align:top;color:#334155;}
+  .mockup-table .mt-key{color:#2563eb;font-weight:700;white-space:nowrap;}
+  .mockup-table .mt-badge{background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:4px;font-size:9px;white-space:nowrap;}
+  .mockup-table .mt-mod{background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;font-size:9px;white-space:nowrap;}
+  .mockup-table .mt-ok{background:#d1fae5;color:#065f46;padding:2px 6px;border-radius:4px;font-size:9px;}
+  .mockup-caption{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);text-align:center;padding:8px;background:var(--paper-dim);}
+
+  /* ---------- billing comparison report mockup ---------- */
+  .billing-mockup-wrap{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:4px 0 20px;box-shadow:0 4px 16px rgba(0,0,0,.08);background:#fff;}
+  .billing-mockup-header{padding:16px 20px;border-bottom:1px solid #e5e7eb;}
+  .billing-mockup-header h5{font-size:16px;font-weight:700;color:#111827;margin:0 0 4px;}
+  .billing-mockup-header .bm-meta{font-size:10.5px;color:#6b7280;font-family:'IBM Plex Mono',monospace;}
+  .billing-mockup-stats{display:flex;gap:8px;padding:14px 20px;flex-wrap:wrap;border-bottom:1px solid #e5e7eb;background:#fafafa;}
+  .billing-mockup-stats .bs{flex:1;min-width:66px;text-align:center;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:8px 4px;}
+  .billing-mockup-stats .bs .bs-num{font-size:19px;font-weight:700;color:#111827;line-height:1.2;}
+  .billing-mockup-stats .bs .bs-num.green{color:#16a34a;}
+  .billing-mockup-stats .bs .bs-num.red{color:#dc2626;}
+  .billing-mockup-stats .bs .bs-label{font-size:9.5px;color:#6b7280;}
+  .billing-mockup-body{padding:16px 20px;}
+  .billing-record{border:1px solid #e5e7eb;border-radius:6px;margin-bottom:12px;overflow:hidden;}
+  .billing-record-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fafafa;flex-wrap:wrap;}
+  .billing-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+  .billing-badge.fail{background:#fee2e2;color:#dc2626;}
+  .billing-badge.pass{background:#dcfce7;color:#16a34a;}
+  .billing-record-id{font-weight:700;font-size:12.5px;color:#111827;}
+  .billing-record-meta{font-size:9.5px;color:#9ca3af;margin-left:auto;font-family:'IBM Plex Mono',monospace;}
+  .billing-field-table{width:100%;border-collapse:collapse;font-size:10.5px;}
+  .billing-field-table td{padding:6px 14px;border-top:1px solid #f3f4f6;color:#374151;}
+  .billing-field-table td.result-same{color:#16a34a;font-weight:600;white-space:nowrap;}
+  .billing-field-table td.result-diff{color:#dc2626;font-weight:600;white-space:nowrap;}
+  .billing-field-table td.result-skip{color:#d97706;font-weight:600;white-space:nowrap;}
+  .billing-field-table tr.diff-row{background:#fef2f2;}
+  .billing-field-table tr.skip-row{background:#fffbeb;}
+
+  /* ---------- bug creator form mockup ---------- */
+  .bugform-mockup-wrap{background:#f1f2f6;border:1px solid var(--line);border-radius:8px;padding:20px 22px;margin:4px 0 20px;box-shadow:0 4px 16px rgba(0,0,0,.06);}
+  .bugform-mockup-wrap h5{font-size:17px;font-weight:800;color:#111827;margin:0 0 4px;}
+  .bf-sub{font-size:11px;color:#6b7280;margin-bottom:16px;}
+  .bf-tabs{display:flex;gap:20px;border-bottom:1px solid #e5e7eb;margin-bottom:16px;}
+  .bf-tab{font-size:12.5px;font-weight:600;color:#6b7280;padding-bottom:8px;}
+  .bf-tab.active{color:#6366f1;border-bottom:2px solid #6366f1;}
+  .bf-quick-box{background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+  .bf-quick-label{font-size:11.5px;font-weight:700;color:#6366f1;margin-bottom:8px;}
+  .bf-quick-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .bf-quick-input{flex:1;min-width:160px;background:#fff;border:1px solid #c7d2fe;border-radius:20px;padding:8px 14px;font-size:11.5px;color:#111827;}
+  .bf-quick-btn{background:#6366f1;color:#fff;font-size:11.5px;font-weight:700;padding:8px 16px;border-radius:20px;white-space:nowrap;}
+  .bf-fields{background:#fff;border-radius:8px;padding:16px 18px;}
+  .bf-field-label{font-size:11.5px;font-weight:700;color:#111827;margin:12px 0 6px;}
+  .bf-field-label:first-child{margin-top:0;}
+  .bf-radio-row{display:flex;gap:16px;font-size:11.5px;color:#374151;flex-wrap:wrap;}
+  .bf-select-box{border:1px solid #d1d5db;border-radius:6px;padding:8px 10px;font-size:11.5px;color:#111827;background:#fff;}
+  .bf-ai-result{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin-top:2px;}
+  .bf-ai-label{font-size:10.5px;font-weight:700;color:#6366f1;margin-bottom:8px;}
+  .bf-ai-tags{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+  .bf-ai-tag{font-size:10.5px;padding:3px 10px;border-radius:12px;background:#eef2ff;color:#4338ca;}
+  .bf-ai-tag.mention{background:#d1fae5;color:#065f46;}
+  .bf-ai-title{font-size:12.5px;font-weight:700;color:#111827;margin-bottom:8px;}
+  .bf-ai-body{font-size:11px;color:#374151;line-height:1.8;}
+  .bf-ai-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .bf-ai-btn{font-size:10.5px;font-weight:700;padding:7px 12px;border-radius:6px;}
+  .bf-ai-btn.primary{background:#6366f1;color:#fff;}
+  .bf-ai-btn.send{background:#16a34a;color:#fff;}
+  .bf-ai-btn.edit{background:#f3f4f6;color:#374151;border:1px solid #d1d5db;}
+
+  /* ---------- tracker mockup ---------- */
+  .tracker-mockup-wrap{background:#f1f2f6;border-radius:8px;padding:18px 20px;border:1px solid var(--line);margin:16px 0 4px;}
+  .tracker-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .tracker-header h5{font-size:15px;font-weight:800;color:#111827;margin:0;}
+  .tracker-header .th-btns{display:flex;gap:8px;}
+  .tracker-btn{font-size:10.5px;font-weight:700;padding:6px 12px;border-radius:6px;background:#fff;border:1px solid #d1d5db;color:#374151;}
+  .tracker-btn.primary{background:#6366f1;color:#fff;border-color:#6366f1;}
+  .tracker-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .tracker-filter{font-size:10.5px;padding:5px 12px;border-radius:14px;background:#fff;border:1px solid #d1d5db;color:#374151;}
+  .tracker-filter.active{background:#6366f1;color:#fff;border-color:#6366f1;}
+  .tracker-card{background:#fff;border-radius:8px;padding:14px 16px;margin-bottom:10px;}
+  .tracker-card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+  .tracker-key{font-weight:700;color:#6366f1;font-size:12px;}
+  .tracker-type{font-size:9.5px;padding:2px 8px;border-radius:4px;background:#e0e7ff;color:#4338ca;}
+  .tracker-type.bug{background:#fee2e2;color:#dc2626;}
+  .tracker-title{font-size:12px;color:#111827;margin-bottom:6px;}
+  .tracker-status{font-size:10px;padding:3px 10px;border-radius:12px;margin-left:auto;white-space:nowrap;}
+  .tracker-status.todo{background:#fef3c7;color:#92400e;}
+  .tracker-status.doing{background:#dbeafe;color:#1e40af;}
+  .tracker-meta{font-size:9.5px;color:#9ca3af;margin-bottom:8px;}
+  .tracker-actions{display:flex;gap:8px;}
+  .tracker-action-btn{font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid #d1d5db;color:#374151;background:#fff;}
+  .tracker-ai-summary{background:#eef2ff;border-radius:6px;padding:10px 12px;margin-top:8px;font-size:10.5px;color:#374151;line-height:1.7;}
+  .tracker-ai-summary b{color:#4338ca;}
+
+  /* ---------- bobi chat widget mockup ---------- */
+  .bobi-chat-wrap{max-width:360px;margin:4px auto 20px;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.12);border:1px solid var(--line);}
+  .bobi-chat-header{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;padding:16px 18px;display:flex;align-items:center;gap:12px;}
+  .bobi-avatar{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none;}
+  .bobi-chat-header .bc-name{font-weight:700;font-size:14.5px;}
+  .bobi-chat-header .bc-sub{font-size:10px;opacity:.85;}
+  .bobi-chat-body{background:#fff;padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .bobi-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:11.5px;line-height:1.7;}
+  .bobi-msg.bot{background:#f1f5f9;color:#1e293b;align-self:flex-start;border-bottom-left-radius:4px;}
+  .bobi-msg.user{background:#2563eb;color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+  .bobi-msg.bot b{color:#1d4ed8;}
+  .bobi-feedback-btn{align-self:flex-start;font-size:10px;padding:3px 12px;border-radius:12px;background:#dcfce7;color:#16a34a;border:1px solid #86efac;}
+  .bobi-chat-input{border-top:1px solid #e5e7eb;padding:10px 14px;display:flex;gap:8px;align-items:center;}
+  .bobi-chat-input .bi-box{flex:1;font-size:10.5px;color:#9ca3af;border:1px solid #dbeafe;border-radius:18px;padding:8px 14px;}
+  .bobi-send-btn{width:30px;height:30px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:13px;}
+
+  /* ---------- FAQ admin mockup ---------- */
+  .faq-admin-wrap{background:#f1f2f6;border-radius:8px;padding:18px 20px;border:1px solid var(--line);margin:4px 0 20px;}
+  .faq-admin-back{font-size:10.5px;color:#6b7280;margin-bottom:10px;}
+  .faq-admin-wrap h5{font-size:17px;font-weight:800;color:#111827;margin:0 0 4px;}
+  .faq-admin-sub{font-size:11px;color:#6b7280;margin-bottom:16px;}
+  .faq-tabs{display:flex;gap:0;margin-bottom:16px;background:#e5e7eb;border-radius:8px;padding:4px;width:fit-content;}
+  .faq-tab{font-size:11px;font-weight:600;padding:8px 16px;border-radius:6px;color:#6b7280;white-space:nowrap;}
+  .faq-tab.active{background:#2563eb;color:#fff;}
+  .faq-report-card{background:#fff;border-radius:8px;padding:16px 18px;}
+  .faq-q{background:#f1f5f9;border-radius:8px;padding:10px 14px;font-size:11.5px;font-weight:600;color:#111827;margin-bottom:10px;}
+  .faq-a{font-size:10.5px;color:#4b5563;line-height:1.9;max-height:180px;overflow:hidden;position:relative;}
+  .faq-a::after{content:"";position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,#fff);}
+  .faq-a table{width:100%;border-collapse:collapse;margin:8px 0;}
+  .faq-a th, .faq-a td{border:1px solid #e5e7eb;padding:4px 6px;font-size:9.5px;text-align:left;}
+  .faq-a th{background:#f9fafb;}
+
+  /* ---------- dossier / 案卷比對室 mockup ---------- */
+  .dossier-mockup{
+    background:#eae7db;
+    background-image:repeating-linear-gradient(0deg, transparent, transparent 22px, #c9c2a8 22px, #c9c2a8 23px);
+    border:1px solid var(--line);border-radius:8px;overflow:hidden;
+    margin:4px 0 20px;box-shadow:0 8px 24px rgba(0,0,0,.1);
+  }
+  .dossier-header{padding:22px 24px 16px;border-bottom:3px double #232a25;position:relative;}
+  .dossier-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:#5c6259;text-transform:uppercase;}
+  .dossier-header h5{font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:#232a25;margin:6px 0 8px;}
+  .dossier-sub{font-size:12px;color:#5c6259;line-height:1.7;max-width:520px;}
+  .dossier-stamp{
+    position:absolute;top:18px;right:20px;width:70px;height:70px;border:2.5px solid #a63a2e;border-radius:50%;
+    color:#a63a2e;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-10deg);
+    font-family:'Fraunces',serif;font-weight:700;font-size:9.5px;line-height:1.25;opacity:.8;
+  }
+  .dossier-tabs{display:flex;gap:20px;padding:12px 24px 0;border-bottom:1px solid #c9c2a8;}
+  .dossier-tab{font-family:'Fraunces',serif;font-weight:700;font-size:13.5px;color:#8a8f83;padding-bottom:10px;}
+  .dossier-tab.active{color:#123c30;border-bottom:2.5px solid #a63a2e;}
+  .dossier-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:14px 24px;}
+  .dossier-search{flex:1 1 200px;background:#f4f2e8;border:1px solid #232a25;border-radius:3px;padding:7px 12px;font-size:11px;color:#5c6259;}
+  .dossier-chip{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 11px;border:1px solid #232a25;border-radius:14px;color:#232a25;white-space:nowrap;}
+  .dossier-result{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5c6259;white-space:nowrap;}
+  .dossier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:4px 24px 18px;}
+  .dossier-card{background:#f4f2e8;border:1px solid #232a25;border-radius:2px;padding:10px 11px;box-shadow:2px 3px 0 rgba(35,42,37,.08);}
+  .dossier-card.selected{outline:2px solid #123c30;outline-offset:1px;border-color:#123c30;}
+  .dossier-card .idno{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#5c6259;}
+  .dossier-card h6{font-family:'Fraunces',serif;font-weight:700;font-size:13px;margin:3px 0 5px;color:#232a25;}
+  .dossier-badge{font-size:8.5px;padding:2px 6px;border-radius:9px;font-family:'IBM Plex Mono',monospace;border:1px solid #c9c2a8;color:#5c6259;display:inline-block;margin-bottom:5px;}
+  .dossier-tray{background:#123c30;color:#f4f2e8;padding:10px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .dossier-tray-label{font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.85;white-space:nowrap;}
+  .dossier-tray-chip{background:#ffffff20;border:1px solid #ffffff50;border-radius:14px;padding:4px 10px;font-size:11px;}
+  .dossier-ledger{padding:18px 24px 22px;}
+  .dossier-ledger h6{font-family:'Fraunces',serif;font-size:15px;color:#232a25;margin:0 0 12px;}
+  .dossier-ledger h6 .n{color:#a63a2e;}
+  .dossier-ledger-table{width:100%;border-collapse:collapse;font-size:10.5px;background:#f4f2e8;}
+  .dossier-ledger-table th{background:#123c30;color:#f4f2e8;padding:8px 10px;text-align:left;font-weight:600;}
+  .dossier-ledger-table td{padding:8px 10px;border-top:1px solid #c9c2a8;color:#232a25;vertical-align:top;}
+  .dossier-ledger-table td.rowlabel{font-weight:600;white-space:nowrap;background:#e0dccb;}
+  .dossier-diff-mark{color:#a63a2e;font-size:9px;border:1px solid #a63a2e;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;margin-left:4px;}
+  .dossier-pill{display:inline-block;font-size:9px;padding:2px 7px;border-radius:9px;border:1px solid #1f6f5c;color:#123c30;margin:2px 3px 2px 0;}
+  .dossier-pill.uniq{border-color:#a63a2e88;color:#a63a2e;background:#a63a2e11;}
+  .dossier-caption{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);text-align:center;padding:8px;background:var(--paper-dim);}
+  .dossier-list-wrap{display:flex;border-top:1px solid #c9c2a8;}
+  .dossier-list-sidebar{width:180px;flex:none;background:#f4f2e8;border-right:1px solid #c9c2a8;max-height:280px;overflow-y:auto;}
+  .dossier-list-item{padding:9px 13px;border-bottom:1px solid #e0dccb;font-size:10.5px;display:flex;justify-content:space-between;color:#232a25;}
+  .dossier-list-item .idno{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8a8f83;}
+  .dossier-list-item.active{background:#123c30;color:#f4f2e8;}
+  .dossier-list-item.active .idno{color:#c9e8dc;}
+  .dossier-detail{flex:1;padding:16px 20px;min-width:0;}
+  .dossier-detail h6{font-family:'Fraunces',serif;font-weight:700;font-size:16px;margin:0 0 4px;color:#232a25;}
+  .dossier-detail-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5c6259;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #c9c2a8;}
+  .dossier-detail-field{margin-bottom:12px;}
+  .dossier-detail-field .lbl{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;color:#123c30;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+  .dossier-detail-field .val{font-size:11.5px;color:#232a25;}
+
+  /* ---------- terminal / CLI mockup ---------- */
+  .terminal-mockup{background:#1e1e2e;border-radius:10px;overflow:hidden;margin:4px 0 20px;box-shadow:0 8px 24px rgba(0,0,0,.15);}
+  .terminal-titlebar{background:#181825;padding:8px 14px;display:flex;align-items:center;gap:6px;}
+  .terminal-dot{width:11px;height:11px;border-radius:50%;}
+  .terminal-dot.red{background:#ff5f56;}
+  .terminal-dot.yellow{background:#ffbd2e;}
+  .terminal-dot.green{background:#27c93f;}
+  .terminal-title{margin-left:8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6c7086;}
+  .terminal-body{padding:16px 18px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#cdd6f4;line-height:1.8;max-height:460px;overflow-y:auto;}
+  .terminal-prompt{color:#89b4fa;margin-bottom:12px;font-weight:600;}
+  .terminal-prompt::before{content:"❯ ";color:#a6e3a1;}
+  .terminal-h{color:#f9e2af;font-weight:700;margin:14px 0 6px;font-size:12px;}
+  .terminal-h2{color:#94e2d5;font-weight:700;margin:10px 0 4px;font-size:10.5px;}
+  .terminal-table{width:100%;border-collapse:collapse;margin:6px 0 12px;font-size:9.5px;}
+  .terminal-table th,.terminal-table td{border:1px solid #313244;padding:4px 7px;text-align:left;color:#cdd6f4;}
+  .terminal-table th{background:#313244;color:#f9e2af;}
+  .terminal-note{color:#a6adc8;font-size:10px;}
+  .terminal-bullet{color:#a6e3a1;}
+  .terminal-divider{border-top:1px dashed #313244;margin:12px 0;}
+
+  /* ---------- expertise / 我的優勢 ---------- */
+  .expertise-section{margin-bottom:52px;}
+  .expertise-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .expertise-card{
+    background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 20px;
+  }
+  .expertise-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:10px;}
+  .expertise-name{font-family:'Fraunces',serif;font-weight:600;font-size:18px;}
+  .expertise-years{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal-dark);background:#E4F1EF;padding:2px 8px;border-radius:8px;white-space:nowrap;}
+  .expertise-desc{font-size:13.5px;color:var(--ink);margin:0 0 12px;}
+  .expertise-chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .expertise-chips .tag{font-size:10.5px;padding:3px 8px;}
+
+  @media (max-width:520px){
+    .expertise-grid{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:520px){
+    .edu-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- placeholder card ---------- */
+  .placeholder-card{
+    border:1.5px dashed var(--line);
+    background:transparent;display:flex;align-items:center;justify-content:center;
+    min-height:80px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:13px;
+    border-radius:6px;
+  }
+
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);}
+
+  @media (max-width:520px){
+    .wrap{padding:36px 18px 70px;}
+    .project > summary{padding:16px 18px;}
+    .proj-body{padding:0 18px 20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="status-line">
+    <span class="status-dot"></span>
+    <span>MONICA · STATUS: ONLINE · 專案數 13 · 最近更新 2026-07-18</span>
+  </div>
+
+  <header>
+    <h1 class="name">Monica</h1>
+    <p class="tagline">醫療系統產品經理,任職於華碩 AICS,負責 xHIS 醫療資訊系統。站在臨床需求與工程實作之間,我習慣把重複性的追蹤、驗證與溝通工作寫成程式,讓系統自己每天準時完成 —— 從政府法規監控、健保資料驗證,到一整套自研的 PRD AI Skills 工具鏈,都是從實際工作痛點裡長出來的解法。比起單純寫規格,我更在意規格寫完之後,能不能被驗證、被追蹤、被自動化。</p>
+    <div class="contact-row">
+      <a class="contact-btn" href="mailto:monica.lee1023@gmail.com">✉ monica.lee1023@gmail.com</a>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <button data-target="tab-overview" class="active">✨ 總覽</button>
+    <button data-target="experience">📜 經歷</button>
+    <button data-target="tab-portfolio">🗂️ 作品</button>
+  </nav>
+
+  <section class="expertise-section tab-panel active" id="tab-overview">
+    <p class="exp-subhead">我的優勢</p>
+
+    <p class="skill-group-label">臨床與健保核心 —— 照實際流程排:醫囑 → 批價 → 申報 → 健保介接</p>
+    <div class="expertise-grid">
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">醫囑系統</span>
+        </div>
+        <p class="expertise-desc">門診、住院、手術醫令的開立與執行邏輯,橫跨掛號到批價申報全流程 —— 懂醫令,才看得懂後面收費跟申報為什麼要這樣設計。</p>
+        <div class="expertise-chips">
+          <span class="tag">和信 · 門診/住院醫令</span><span class="tag">新光 · 手術預約/排程</span><span class="tag">現職 · BillingLogic 醫令對應</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">批價</span>
+        </div>
+        <p class="expertise-desc">從手動核對收據、到現在用 AI 反過來拿收據跟歷史資料驗證計價邏輯,批價的核心邏輯摸了整個職涯。</p>
+        <div class="expertise-chips">
+          <span class="tag">和信 · 批價系統</span><span class="tag">新光 · 門診/住院結帳</span><span class="tag">現職 · BillingLogic 雙軌驗證</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">申報</span>
+        </div>
+        <p class="expertise-desc">健保申報規則常變、又牽動前後端一起改。見證了申報作業從人工比對法規,到現在自動監控異動、自動預檢資料的轉變。</p>
+        <div class="expertise-chips">
+          <span class="tag">和信 · 門診/住院申報</span><span class="tag">新光 · 抽審申覆爭審</span><span class="tag">現職 · 政府法規監控系統</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">健保中台與跨機關介接</span>
+        </div>
+        <p class="expertise-desc">健保 IC 卡上傳、跨機關法規監控、國健署 NIIS 疫苗系統對接 —— 健保署、國健署、疾管署各自的介接規則跟卡片認證機制都實際摸過。</p>
+        <div class="expertise-chips">
+          <span class="tag">新光 · IC卡/健保獎勵上傳</span><span class="tag">現職 · 政府法規監控(6機關)</span><span class="tag">現職 · VAC NIIS 疫苗介接</span>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="skill-group-label" style="margin-top:28px;">分析與規劃 —— 從單點數據到整體導入策略</p>
+    <div class="expertise-grid">
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">指標</span>
+        </div>
+        <p class="expertise-desc">擅長把模糊的「做得好不好」變成可以追蹤的數字,從院內評鑑指標建置,到現在幫自己做的每個工具都算清楚投資報酬率。</p>
+        <div class="expertise-chips">
+          <span class="tag">新光 · 評鑑/營運指標</span><span class="tag">PowerBI / SAS / SPSS</span><span class="tag">現職 · 量化成效追蹤</span>
+        </div>
+      </div>
+
+      <div class="expertise-card">
+        <div class="expertise-top">
+          <span class="expertise-name">系統整合與導入規劃</span>
+        </div>
+        <p class="expertise-desc">不管是單院所的系統轉置,還是多院所的導入策略,都是同一種能力:先搞清楚現況,再排出合理的優先順序。</p>
+        <div class="expertise-chips">
+          <span class="tag">新光 · SAP CO 資訊轉置</span><span class="tag">現職 · 屏東衛生所盤點</span><span class="tag">現職 · VAC 系統規劃</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="tab-panel" id="tab-portfolio">
+    <nav class="subnav">
+      <button data-subtarget="cat-health" class="active">🩺 健康法規自動化</button>
+      <button data-subtarget="cat-collab">🤝 協作工具</button>
+      <button data-subtarget="cat-pm-skills">📐 PM 工具鏈</button>
+      <button data-subtarget="cat-strategy">🧭 策略規劃</button>
+      <button data-subtarget="cat-personal">🗂️ 個人生產力工具</button>
+    </nav>
+
+  <!-- ============================================================ -->
+  <!-- 分類一：健康法規自動化                                        -->
+  <!-- ============================================================ -->
+  <section class="category subpanel active" id="cat-health">
+    <div class="category-head">
+      <span class="cat-dot health"></span>
+      <h2>健康法規自動化</h2>
+      <span class="count">(4)</span>
+    </div>
+    <p class="category-note">追蹤政府醫療法規異動,並在資料真的送出去之前先做好合規檢查。</p>
+
+    <!-- 專案：政府醫療法規每日監控系統 -->
+    <details class="project">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>政府醫療法規每日監控系統</h3>
+          <span class="proj-badge">健康 / 自動化</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">每天自動抓 6 個政府機關、17 條路徑的公告,三級分類 + LLM 抽取重點,Critical 異動 10 分鐘內自動建單,並串接自動修復與測試生成。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Python</span><span class="tag">Web Scraping</span><span class="tag">Gemini / Groq / Ollama</span><span class="tag">GitHub Actions</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          醫療產業的系統(批價、申報、代碼對應)高度依賴政府法規,但健保署、國健署、疾管署等 6 個機關幾乎每天都會發公告,
+          格式又不統一。人工盯網站不但耗時,還容易漏看真正會影響系統的關鍵異動,常常等到 Critical 項目已經上線出包才發現。
+          這個系統把「發現公告 → 判斷有沒有影響 → 通知該處理的人 → 產出規格文件」整個流程自動化。
+        </p>
+
+        <h4 class="subhead">導入前後對比</h4>
+        <table class="stat-table">
+          <tr><th>指標</th><th>導入前</th><th>導入後</th></tr>
+          <tr><td class="metric-name">人工介入</td><td class="before">每日 30–60 分鐘人工巡檢 6 個機關官網,假日常漏查</td><td class="after">0 分鐘 —— 每日 09:00 全自動執行,6 機關 17 路徑 100% 覆蓋,全年無休</td></tr>
+          <tr><td class="metric-name">Critical 建單</td><td class="before">1–3 天通報延遲,靠口頭 / 即時通知,無留存紀錄</td><td class="after">< 10 分鐘 —— AI 三級分類 + LLM 自動抽取,同步建單追蹤</td></tr>
+          <tr><td class="metric-name">需求落差</td><td class="before">法規與 PRD 全靠人工比對,常常 2–4 週後才發現落差</td><td class="after">每日同步比對,問題當天浮現,不用等到 Critical 項目上線才知道</td></tr>
+          <tr><td class="metric-name">文件自動化</td><td class="before">0% —— PRD 規格文件全靠人工維護,法規脈絡無法追溯</td><td class="after">100% —— 每份異動自動產生 Markdown PRD,同步推送版本庫存</td></tr>
+        </table>
+
+        <h4 class="subhead">處理流程(10 個自動化步驟)</h4>
+        <div class="pipeline">
+          <span class="step">01 抓取官網</span><span class="arrow">→</span>
+          <span class="step">02 三級分類</span><span class="arrow">→</span>
+          <span class="step">03 LLM 解析</span><span class="arrow">→</span>
+          <span class="step">04 影響分析</span><span class="arrow">→</span>
+          <span class="step">05 分桶彙整</span><span class="arrow">→</span>
+          <span class="step">06 產出報告</span><span class="arrow">→</span>
+          <span class="step">07 Email 通報</span><span class="arrow">→</span>
+          <span class="step">08 Jira 建單 → xSwift 分析</span><span class="arrow">→</span>
+          <span class="step">09 PRD 自動產生</span><span class="arrow">→</span>
+          <span class="step">10 xGovTrial 測試生成</span>
+        </div>
+
+        <h4 class="subhead">三級分類</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">Critical</span></td><td>會直接影響系統邏輯或申報結果的異動 —— 自動建立高優先工單,當天追蹤</td></tr>
+          <tr><td><span class="scope-pill scope-price">Important</span></td><td>需要留意但不急迫的異動 —— 記錄在報告中,定期檢視</td></tr>
+          <tr><td><span class="scope-pill scope-ops">Reference</span></td><td>僅供參考知悉的公告 —— 收錄存查,不主動通知</td></tr>
+        </table>
+
+        <h4 class="subhead">上線後的疊代:從「嚴重度」改成「行動」</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          三級分類上線一段時間後發現一個問題:RD 看到「Critical」只知道嚴重,還要自己對照異動類型才知道該做什麼。
+          於是重構成 4 個「行動分桶」,標籤直接告訴讀者要做什麼,不用自己再判斷一次:
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">[PR] 需改 code</span></td><td>Critical + LOGIC/CODE —— 程式邏輯異動,需要開 PR</td></tr>
+          <tr><td><span class="scope-pill scope-price">[DB] 需調整設定</span></td><td>Critical + PRICE —— 不改程式,但需更新資料節點 / 費率表</td></tr>
+          <tr><td><span class="scope-pill scope-logic">[xHIS] 相關公告</span></td><td>Critical OPS + 所有 Important —— 系統相關,PM/維運知悉確認即可</td></tr>
+          <tr><td><span class="scope-pill scope-ops">[i] 無關公告</span></td><td>與系統無關 —— 折疊顯示,不主動打擾</td></tr>
+        </table>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">
+          同時收斂 Jira 開票範圍:原本所有 LLM 解析成功的 Critical 項目都會開票,重構後只有真正「需要動作」
+          (需改 code / 需調設定)才開票,單純「知悉即可」的不再產生工單雜訊。
+        </p>
+
+        <div class="impact-line">
+          <b>三管道同步通報：</b>Critical 異動會同時發到 Jira 建票、Email 通知、並自動產生 Markdown PRD 推送到版本庫,
+          三個管道各司其職,不怕漏掉任何一邊。
+        </div>
+
+        <h4 class="subhead">下游延伸:不只建單,還接著修</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          Jira 工單建立之後,系統並沒有停在「通知人」這一步,還接了兩個下游自動化,讓「發現問題」到「修好並測過」變成一條完整的鏈:
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">xSwift</span></td><td>讀取 Jira 工單內容,分析法規異動對應的程式邏輯,自動產生程式碼修改並直接開出 PR,交由 RD Review</td></tr>
+          <tr><td><span class="scope-pill scope-logic">xGovTrial</span></td><td>結合 Jira 工單與自動產生的 PRD,自動產生對應的健保(NHI)測試案例,補齊這類法規異動的測試覆蓋</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>從發現到修復的完整閉環：</b>法規異動 → 建單通知 → xSwift 分析並開 PR → xGovTrial 產生測試案例,
+          整條鏈只有 PR 的 Code Review 這一步需要人工把關,其餘全部自動串接。
+        </div>
+
+        <div class="limitation-box">
+          <div class="lim-title">⚠ 誠實面對:目前還沒解決的限制</div>
+          <ul>
+            <li>部分政府機關網站需要憑證卡 / 讀卡機認證才能進入,目前爬蟲只能監測公開網站,無法跨越這層驗證</li>
+            <li>解析邏輯依賴 RegEx,官網改版時沒有自動告警機制,資料抓取可能靜默中斷而不自知</li>
+            <li>Jira 端缺乏去重機制,手動重跑腳本時有重複建單的風險</li>
+            <li>每日排程有固定執行時間窗口,若當天處理超時,整批任務會直接跳過</li>
+            <li>異動比對目前是純字串比對,抓不到用詞不同但意思相同的異動;部分處理上限是寫死的常數</li>
+          </ul>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Web Scraping</span>
+          <span class="tag">Gemini / Groq / Ollama</span>
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">排程自動化</span>
+          <span class="tag">工單自動建立</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>穩健的排程設計：</b>採用「dead-man's switch」概念,每天固定發布報告,即使沒有新公告也會產出「本次無異動」的確認頁,避免系統靜默失敗卻沒人發現。</li>
+            <li><b>多層 LLM fallback：</b>解析 PDF / ODS 公告內容時依序嘗試 Gemini → Groq → Ollama,前面的服務不穩定時自動換下一個,確保每天都能正常產出。</li>
+            <li><b>可測試性：</b>提供 dry-run(不寫入、不發布、不建單)與 html-only(只產出報告不觸發後續動作)兩種模式,方便在正式環境外驗證邏輯是否正確。</li>
+            <li><b>模組化的抓取與分析邏輯：</b>沿用共用的抓取 / 解析 / 分類模組,新的公告來源只需要擴充解析規則,不用重寫整條流程。</li>
+            <li><b>自動化收斂：</b>發布出去的報告頁面會自動清理 90 天前的舊資料,避免歷史紀錄無限累積。</li>
+            <li><b>PRD 自動產生：</b>Critical 異動經人工 Review 後,會自動轉成標準格式的 Markdown PRD 並推送到版本庫,銜接後續規格問答與追蹤。</li>
+            <li><b>下游自動修復與測試：</b>Jira 工單會觸發 xSwift 讀取內容並分析對應程式邏輯,自動產生程式碼修改開出 PR;同時 xGovTrial 讀取工單與 PRD,自動產生對應的 NHI 測試案例,兩者分頭進行、互不阻塞。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部系統 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <!-- 專案：健保卡上傳 XML 預檢工具 -->
+    <details class="project">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>健保卡上傳 XML 預檢工具</h3>
+          <span class="proj-badge">健康 / 資料驗證</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">上傳健保署前先在本地掃過一次 XML,依情境套用不同規則,連 ICD-10 格式、序號連續性、特殊識別碼都逐一比對。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Python</span><span class="tag">XML 驗證</span><span class="tag">情境規則引擎</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          健保卡資料上傳的 XML 有嚴格的官方格式規範,而且規則會依「就醫情境」不同而不同 ——
+          同一個欄位在正常取卡時必填,換成預防保健或異常取卡情境,卻可能要求整個欄位都不能出現。
+          人工檢查很容易漏看這種依情境而變的規則,一旦送到健保署才被打回票,還得抓問題、修正、重傳,徒增等待時間。
+          這個工具在真正送出前先在本地掃一輪,把能抓到的錯誤都先抓出來。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">讀取 XML(自動處理 Big5)</span><span class="arrow">→</span>
+          <span class="step">判斷就醫情境</span><span class="arrow">→</span>
+          <span class="step">套用對應規則逐欄檢核</span><span class="arrow">→</span>
+          <span class="step">交叉邏輯與格式檢核</span><span class="arrow">→</span>
+          <span class="step">產出驗證報告</span>
+        </div>
+
+        <h4 class="subhead">三種就醫情境,規則各不相同</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">正常取卡</span></td><td>一般門診就醫,多數欄位為必填</td></tr>
+          <tr><td><span class="scope-pill scope-code">異常取卡</span></td><td>讀卡失敗改手動輸入,部分欄位規則改變,序號格式也不同,且不可與慢連箋異動等特殊類別合用</td></tr>
+          <tr><td><span class="scope-pill scope-logic">預防保健</span></td><td>健檢/篩檢類就醫,特定欄位(如給付類別)反而要求留空</td></tr>
+        </table>
+
+        <h4 class="subhead">檢查的七個層次</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">結構完整性</span></td><td>確認 MSH 表頭段存在;若有醫令段(MB2)卻沒有健保資料段(MB1),直接判定整份退件</td></tr>
+          <tr><td><span class="scope-pill scope-price">欄位存在性</span></td><td>依情境判斷每個欄位是「必填」「選填」還是「不該出現」,三種情境各自對應不同規則表</td></tr>
+          <tr><td><span class="scope-pill scope-logic">值正確性</span></td><td>固定值、就醫類別完整合法值白名單、異常/預防保健序號格式是否符合情境要求</td></tr>
+          <tr><td><span class="scope-pill scope-ops">交叉欄位邏輯</span></td><td>調劑方式與醫令類別的合法組合、委託代檢是否有填機構代號、補卡/異常取卡相關欄位是否連動填寫</td></tr>
+          <tr><td><span class="scope-pill scope-code">ICD-10 與手術代碼格式</span></td><td>診斷碼與手術處置代碼不可含小數點(如 J06.9 需改 J069),且需符合「字母開頭 + 至少兩位數字」的格式</td></tr>
+          <tr><td><span class="scope-pill scope-logic">序號連續性</span></td><td>醫令序號應從 001 起連續遞增,不連續就精確標出是第幾筆醫令、預期值是多少</td></tr>
+          <tr><td><span class="scope-pill scope-ops">長度與格式</span></td><td>依官方公告的欄位長度上限逐一檢查,並抓出應該用全形卻誤用半形的特殊符號</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>真實案例挖出的規則：</b>從某院所的實際錯誤報告裡發現,異常取卡(H01=B)一旦跟慢連箋異動(M07=AI)這類特殊類別合併使用,
+          22 筆記錄「全部」驗證失敗——後來把這個組合明確寫成規則,送出前直接攔下來,不用再等健保署那邊才發現整批出包。
+        </div>
+
+        <div class="impact-line">
+          <b>連常見的手誤都抓得到：</b>異常取卡時,系統要求特定欄位必須「剛好」填 <code>MISS0000000000000000</code>(20 碼);
+          最常見的手誤是少打一個 S 變成 17 碼的 <code>MISS000000000000000</code>,工具會直接標出實際碼數跟正確值的差異,一眼就看出問題在哪。
+        </div>
+
+        <div class="impact-line">
+          <b>把退件風險留在本地：</b>驗證報告會列出每筆記錄的錯誤與警告,精確標到欄位代碼、中文欄位名稱與記錄編號,
+          直接對應回原始資料就能修正,不用等健保署退件通知才知道哪裡錯。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">xml.etree.ElementTree</span>
+          <span class="tag">健保官方規格</span>
+          <span class="tag">情境規則引擎</span>
+          <span class="tag">CLI 工具</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>處理健保署特有的編碼問題：</b>官方 XML 常宣告 Big5 / CP950 編碼,但 Python 內建的 XML 解析器不支援,工具會先手動解碼再轉換,避免直接解析失敗。</li>
+            <li><b>情境自動判斷：</b>依「格式代碼」與「就醫類別」兩個欄位自動判斷屬於正常 / 異常 / 預防保健三種情境之一,不用人工分辨要套哪套規則。</li>
+            <li><b>隱藏的交叉規則整理成表：</b>官方公告裡「調劑方式」與「醫令類別」的合法組合是分散寫在文字說明裡的,這裡整理成明確的對照表,靠人工比對很容易看漏。</li>
+            <li><b>兩種醫令包裝格式自動偵測：</b>官方格式的醫令段有時是多個平行節點(每個各自包欄位),有時是單一節點底下包多筆子節點,工具會自動判斷是哪一種寫法再解析,不會因為系統產出格式不同就漏讀。</li>
+            <li><b>精確比對特殊識別碼：</b>某些情境要求欄位值必須「完全等於」特定的 20 碼字串,工具不是只檢查格式,而是逐字元比對,連少一個字元這種容易忽略的手誤都能抓到。</li>
+            <li><b>結構化 Exit Code：</b>0 表示全數通過、1 表示有記錄未通過、2 表示檔案本身有問題(解析失敗或找不到記錄),方便串進自動化流程當作卡關檢查點,而不只是給人看的報告。</li>
+            <li><b>可批次處理：</b>支援單一 XML 檔內含多筆就醫記錄,逐筆給出獨立的通過/失敗結果與問題清單。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部工具 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="relation-connector">
+      <span class="bend"></span>
+      <span>同樣「轉出 XML 就能立刻自查」的設計理念,這次應用在申報媒體檔上 ↓</span>
+    </div>
+
+    <!-- 專案：NHI 門診申報 XML 檢核程式 -->
+    <details class="project">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>NHI 門診申報 XML 檢核程式</h3>
+          <span class="proj-badge">健康 / 資料驗證</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">跟健保卡預檢工具一樣,轉出申報 XML 就能立刻檢核,連 ICD-10 診斷碼格式、預防保健年齡資格、性別限定診斷碼都能抓出來。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Python</span><span class="tag">官方稽核規則比對</span><span class="tag">CLI 工具</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          門診申報的 XML(<code>&lt;outpatient&gt;</code> 格式,格式代碼 10)一旦格式有誤,一樣會被健保署整份退件。
+          這隻工具比照健保卡預檢工具的做法——申報作業人員只要把系統轉出的 XML 丟進來,馬上就知道有沒有問題,
+          不用等健保署退件通知才發現。每一條檢核邏輯都對應官方規格書與稽核規則文件的具體規則編號,
+          不是憑經驗猜的土法檢查,而是有官方依據可以追溯。
+        </p>
+
+        <h4 class="subhead">XML 三段式結構</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">總表段</span></td><td>tdata,機構基本資訊與各類案件申請件數/點數彙總(t37/t38 須等於各類明細加總)</td></tr>
+          <tr><td><span class="scope-pill scope-price">點數清單段</span></td><td>ddata,案件分類、身分資料、就醫明細,支援官方規格允許的「扁平」與「巢狀(dhead+dbody)」兩種寫法</td></tr>
+          <tr><td><span class="scope-pill scope-logic">醫令清單段</span></td><td>pdata,巢狀在案件底下,一筆案件可能對應多筆醫令,含調劑方式、執行人員、代檢機構等欄位</td></tr>
+        </table>
+
+        <div class="pipeline">
+          <span class="step">讀取 XML(自動判斷 Big5/UTF-8)</span><span class="arrow">→</span>
+          <span class="step">逐案件結構/必填/型態檢核</span><span class="arrow">→</span>
+          <span class="step">交叉欄位與彙總檢核</span><span class="arrow">→</span>
+          <span class="step">對照官方稽核規則比對</span><span class="arrow">→</span>
+          <span class="step">輸出 ERROR/WARN 報告</span>
+        </div>
+
+        <h4 class="subhead">檢查項目(每條都對應官方規則編號)</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">格式與型態</span></td><td>日期(7 碼 YYYMMDD)/日期時間(11 碼)格式、ICD-10 診斷碼格式不可含小數點(規則 33)</td></tr>
+          <tr><td><span class="scope-pill scope-price">交叉欄位邏輯</span></td><td>醫令調劑方式(p2)與醫令類別(p3)合法組合、委託代檢時代檢機構代號(p24)須填(規則 12/B0)</td></tr>
+          <tr><td><span class="scope-pill scope-logic">序號連續性</span></td><td>醫令序(p13)、流水編號(d2)須從 1 開始連續遞增,排序後一旦中斷就標記整批(規則 44/53/60)</td></tr>
+          <tr><td><span class="scope-pill scope-ops">彙總一致性</span></td><td>申請點數(d41)須等於合計點數(d39)減部分負擔(d40),部分負擔(d40)須等於 d57+d58,總表段彙總須與案件明細加總一致</td></tr>
+          <tr><td><span class="scope-pill scope-code">給藥日份規則</span></td><td>一般案件給藥不可超過 7 天,慢性病連續處方箋須 ≥ 28 天(規則 66)</td></tr>
+          <tr><td><span class="scope-pill scope-logic">預防保健年齡資格</span></td><td>依就醫序號(如 IC81 嬰幼兒篩檢、IC21 大腸癌篩檢)比對病患實際年齡是否落在規定範圍內(規則 38/45-48/71-74)</td></tr>
+          <tr><td><span class="scope-pill scope-price">性別限定診斷碼</span></td><td>依身分證字號推算性別,交叉比對申報的 ICD-10 診斷碼是否為異性限定疾病代碼(規則 W1/W2)</td></tr>
+          <tr><td><span class="scope-pill scope-ops">機構專屬規則</span></td><td>可針對特定院所代號設定專屬檢核邏輯(例如某院所藥品固定為交付調劑),不是所有院所都套用同一套規則</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>實際測試案例：</b>檢核一份申報 XML,抓到「資料格式應填 10,實際卻填 99」「案件分類代碼 ZZ 不合法」
+          「申請點數 500 應等於合計點數 500 減部分負擔 50,等於 450,實際卻不符」三筆錯誤,清楚標出段落位置、欄位代碼與正確答案,
+          申報人員可以直接對照原始資料修正,不用自己一格一格算。
+        </div>
+
+        <div class="impact-line">
+          <b>更進一步的稽核案例：</b>某筆申報就醫序號填的是嬰幼兒篩檢專用代碼(限齡 0～72 個月),
+          程式依出生日期與就醫日期反推病患實際年齡已超出資格上限,直接標記警示;另一筆申報的身分證字號顯示病患為男性,
+          但申報的主診斷碼卻是女性限定疾病代碼,同樣被規則攔下來——這類需要交叉換算年齡或推算性別才能發現的問題,
+          人工審查非常容易漏看。
+        </div>
+
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          序號連續性檢查也抓到實際問題:
+        </p>
+        <table class="stat-table">
+          <tr><th>位置</th><th>問題</th><th>正確規則</th><th>說明</th></tr>
+          <tr><td class="metric-name">p13 醫令序</td><td class="before">1, 2, 4, 5…</td><td class="after">1, 2, 3, 4…</td><td>排序後第 3 筆缺號,整批標記待確認</td></tr>
+        </table>
+
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">lxml / xml.etree</span>
+          <span class="tag">官方稽核規則比對</span>
+          <span class="tag">CLI 工具</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>lxml 優先,自動降級：</b>優先使用 lxml 函式庫解析(效能較好、容錯性佳),環境沒裝的話自動切換成 Python 內建的 xml.etree,不會因為缺套件就整個掛掉。</li>
+            <li><b>Big5 編碼自動判斷：</b>讀取檔案時偵測宣告編碼是否為 Big5,是的話手動轉碼再交給 XML 解析器,避免內建工具不支援 Big5 直接解析失敗。</li>
+            <li><b>支援兩種 ddata 寫法：</b>健保官方規格書允許「扁平寫法」(欄位直接放在 ddata 下)或「巢狀寫法」(用 dhead+dbody 包一層),工具兩種格式都能正確解析,不會因為系統產出的格式寫法不同就漏讀欄位。</li>
+            <li><b>規則都對應官方文件章節：</b>每條檢核邏輯都在程式裡標註對應規格書版本與規則編號(如規則 33、44、53、60、66、84、W1/W2),之後官方規則異動要修改對應邏輯,可以直接對照文件章節快速定位到程式碼位置。</li>
+            <li><b>機構專屬規則可擴充：</b>除了通用規則,也支援針對特定院所代號寫專屬檢核邏輯,未來要加其他院所的特例,只要照同樣模式擴充即可,不用更動主要規則引擎。</li>
+            <li><b>結構化 Exit Code + JSON 輸出：</b>支援 <code>--json</code> 輸出結構化結果方便程式整合,<code>--errors-only</code> 可只看 ERROR 略過 WARN;Exit Code 0 表示全數通過、1 表示有錯誤,方便串進自動化流程當作卡關檢查點。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部工具 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="relation-connector">
+      <span class="bend"></span>
+      <span>共用同一套每日排程,爬蟲產出的公告當天就會進到這個知識庫 ↓</span>
+    </div>
+
+    <!-- 專案：Gov QA 政府法規問答系統 -->
+    <details class="project">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>Gov QA 政府法規問答系統</h3>
+          <span class="proj-badge">健康 / AI 知識庫</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">整合政府法規 PDF、內部 PRD 規格與每日公告,近 5,000 個知識片段一句話就能問,答案附原始出處。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Gemini 2.5 Flash</span><span class="tag">RAG 檢索</span><span class="tag">CLI 工具</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          查法規以前要翻幾十份 PDF,還不確定哪份是最新版;RD 規格文件跟法規依據又是分開的兩個世界,沒辦法交叉查詢。
+          這個系統把三種資料來源全部整合進同一個知識庫——問一句話,AI 就從近 5,000 個知識片段裡揪出最相關的段落,
+          附上原始來源(檔案 + 日期),不用自己再一份一份翻找。
+        </p>
+
+        <h4 class="subhead">導入前後對比</h4>
+        <table class="stat-table">
+          <tr><th>指標</th><th>以前的痛點</th><th>現在可以做到</th></tr>
+          <tr><td class="metric-name">查資料方式</td><td class="before">每次查法規要翻數十份 PDF,還不確定哪份是最新版</td><td class="after">一句話提問,AI 秒查所有文件,附原始來源檔案與頁碼</td></tr>
+          <tr><td class="metric-name">公告追蹤</td><td class="before">政府公告太多,人工追蹤費時,常常漏看</td><td class="after">每日政府公告自動進入知識庫,當天爬到當天就能查</td></tr>
+          <tr><td class="metric-name">規格對照</td><td class="before">RD 規格與法規依據各自獨立,無法交叉查詢</td><td class="after">PRD 內部規格與政府文件可以一起查,一次問到兩邊的答案</td></tr>
+        </table>
+
+        <div class="pipeline">
+          <span class="step">使用者提問</span><span class="arrow">→</span>
+          <span class="step">關鍵字搜尋比對</span><span class="arrow">→</span>
+          <span class="step">取 Top-6 相關片段</span><span class="arrow">→</span>
+          <span class="step">AI 判斷是否足夠</span><span class="arrow">→</span>
+          <span class="step">回答 + 附來源出處</span>
+        </div>
+
+        <h4 class="subhead">知識庫組成(總計 4,958 個片段,來自 157 份來源檔案)</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">政府 PDF 文件</span></td><td>54 份 —— NHI WebAPI 規格、健保卡上傳格式 2.0、支付標準、成人預防保健、兒童發展篩檢、癌症篩檢等官方規格書</td></tr>
+          <tr><td><span class="scope-pill scope-logic">內部 PRD 規格</span></td><td>66 份 —— 門診功能、申報抽檔、健保卡上傳、重新計費、疫苗管理等團隊自撰規格,可與政府法規交叉對照</td></tr>
+          <tr><td><span class="scope-pill scope-ops">每日政府公告</span></td><td>37 天累積 —— 每日自動爬取,涵蓋健保署、國健署、疾管署、食藥署、衛福部、行政院公報 6 個機關</td></tr>
+        </table>
+
+        <h4 class="subhead">兩種回答模式</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-logic">RAG 模式</span></td><td>知識庫裡有相關內容時,依原始文件內容回答,並附上檔案路徑與日期,可以直接回頭查證</td></tr>
+          <tr><td><span class="scope-pill scope-ops">Google AI 模式</span></td><td>知識庫找不到相關資料時,自動切換由 Gemini 以訓練知識直接回答,並明確標示「此答案來自 AI 通識知識,請至官網確認」</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>自動學習,越用越準：</b>用 Google AI 模式回答後,該問答會自動寫進學習檔案,且不會因為知識庫重建而被清除。
+          下次問到同樣主題,直接升級成 RAG 模式回答,附上出處與日期。
+        </div>
+
+        <div class="terminal-mockup">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot red"></span><span class="terminal-dot yellow"></span><span class="terminal-dot green"></span>
+            <span class="terminal-title">gov-qa — qag</span>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-prompt">qag 偏鄉巡迴醫療 是在什麼情況下 會論次計酬</div>
+
+            <div>原始文件已找到完整的論次計酬條件。現在整理成清晰的回答:</div>
+
+            <div class="terminal-h">偏鄉巡迴醫療 論次計酬觸發條件</div>
+
+            <div class="terminal-h2">觸發前提:已核准參與本方案</div>
+            <div>診所/醫院必須先與健保署簽約、取得巡迴計畫核准,才有論次計酬資格。<b>不是每次派人去就可以申報</b>,需先登記巡迴時間表(附件 4-1)並向分區業務組核備。</div>
+
+            <div class="terminal-h2">計費單位:每一次巡迴班次(半天)</div>
+            <table class="terminal-table">
+              <tr><th>項目</th><th>說明</th></tr>
+              <tr><td>計費單位</td><td>每執行一次巡迴班次(不是每位病人)</td></tr>
+              <tr><td>申報人員</td><td>醫師、護理人員、藥事人員各自分開申報</td></tr>
+              <tr><td>申報時機</td><td>每個班次執行完畢後,次月 20 日前申報</td></tr>
+              <tr><td>申報方式</td><td>填附件 6「論次醫療費用申請表」,上傳健保 VPN + 郵寄紙本至分區業務組</td></tr>
+            </table>
+
+            <div class="terminal-h2">支付點數依「鄉鎮分級」+「一般日/例假日」決定</div>
+            <div class="terminal-note">一般日(含夜診)</div>
+            <table class="terminal-table">
+              <tr><th>人員</th><th>第一級</th><th>第二級</th><th>第三級</th></tr>
+              <tr><td>醫師</td><td>P2011C 4,000點</td><td>P2005C 5,000點</td><td>P2013C 8,000點</td></tr>
+              <tr><td>護理人員</td><td>P2007C 1,200點</td><td>P2015C 1,500點</td><td>P2016C 1,800點</td></tr>
+              <tr><td>藥事人員</td><td>P2009C 1,200點</td><td>P2019C 1,500點</td><td>P2020C 1,800點</td></tr>
+            </table>
+            <div class="terminal-note">例假日</div>
+            <table class="terminal-table">
+              <tr><th>人員</th><th>第一級</th><th>第二級</th><th>第三級</th></tr>
+              <tr><td>醫師</td><td>P2012C 5,000點</td><td>P2006C 6,000點</td><td>P2014C 9,000點</td></tr>
+              <tr><td>護理人員</td><td>P2008C 1,700點</td><td>P2017C 2,000點</td><td>P2018C 2,300點</td></tr>
+              <tr><td>藥事人員</td><td>P2010C 1,700點</td><td>P2021C 2,000點</td><td>P2022C 2,300點</td></tr>
+            </table>
+            <div>天然災害停班日(非人事行政總處公告例假日)→ 按一般日計。</div>
+
+            <div class="terminal-divider"></div>
+
+            <div class="terminal-h">HIS 完全不處理論次計酬</div>
+            <div>論次計酬<b>不走 KOPD 批價流程</b>,HIS 不需做任何事。這是診所行政人員的獨立作業:</div>
+            <div style="margin:8px 0;">
+              <span class="terminal-bullet">病人批價(HIS P57001/P57002)</span> ← 每位病人各自<br>
+              <span class="terminal-bullet">論次計酬(附件 6 手動填報)</span> ← 整個班次一筆,行政人員處理
+            </div>
+            <div>兩者完全平行,互不干擾。</div>
+
+            <div class="terminal-divider"></div>
+
+            <div class="terminal-h2">常見問題:「D4/G5 一定有論次計酬嗎?」</div>
+            <div>
+              不一定。D4/G5 是觸發診察費走 P57001/P57002 的必要條件,但論次計酬還需額外滿足:<br>
+              1. 診所/醫院已取得分區業務組核准的巡迴計畫<br>
+              2. 該班次依時間表實際執行(無故缺診不計)<br>
+              3. 執行人員(醫師/護理/藥事)已列在核准名單內<br><br>
+              → 換句話說:有 D4/G5 不等於一定有論次計酬;論次計酬是事前申請、事後申報的獨立機制,HIS 系統完全不感知它的存在。
+            </div>
+          </div>
+        </div>
+        <p class="mockup-caption" style="margin:-10px 0 20px;">終端機示意圖 —— 實際 qag CLI 查詢畫面,答案已依官方文件與內部規格整理,無真人對話或個資</p>
+
+        <div class="impact-line">
+          <b>實際問答範例：</b>問「成人預防保健第二階段服務間隔時間有什麼規定」,系統從官方文件裡找到對應條文,
+          回答「兩階段服務間隔超過三個月者,不得申報第二階段服務費用」,並標明來源是哪份公告文件與發布日期,不是憑印象回答。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Gemini 2.5 Flash</span>
+          <span class="tag">Groq LLaMA 3.3 70B</span>
+          <span class="tag">RAG 檢索</span>
+          <span class="tag">CLI 工具</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>CJK 友善的檢索邏輯：</b>中文沒有天然分詞空格,自己寫了逐字切割加詞頻比對的檢索邏輯,不依賴額外的中文分詞套件;並設定「至少 40% 查詢關鍵字要出現在候選段落」的覆蓋率門檻,避免答非所問的段落被選中排序靠前。</li>
+            <li><b>雙引擎備援：</b>主力是 Gemini 2.5 Flash(免費方案,每天 1,500 次額度),中文理解與推理能力優異;Gemini 無法回應時自動切換 Groq(LLaMA 3.3 70B),速度快、品質也不錯,確保系統不會因為單一服務商斷線就整個查不到。</li>
+            <li><b>只重建有變動的部分：</b>用檔案雜湊值追蹤索引狀態,daily 排程只重新索引當天新增的公告,不用整個知識庫重建;新增 PDF 文件時只需手動跑一次更新指令,約 1-2 分鐘完成。</li>
+            <li><b>簡單好用的 CLI 設計：</b><code>qag 問題</code> 直接問、<code>qag</code> 進入互動模式連續問答、<code>qag update</code> 增量更新、<code>qag rebuild</code> 完整重建(很少用到)。</li>
+            <li><b>零額外訂閱成本：</b>整套系統跑在本地端加上免費雲端 API 額度,不需要額外付費訂閱,所有答案都附原始文件來源供人工驗證,不是黑盒子。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部工具 · 無公開 Demo</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 分類二：協作工具                                              -->
+  <!-- ============================================================ -->
+  <section class="category subpanel" id="cat-collab">
+    <div class="category-head">
+      <span class="cat-dot tool"></span>
+      <h2>協作工具</h2>
+      <span class="count">(2)</span>
+    </div>
+    <p class="category-note">給別人用的回報與溝通工具,使用者橫跨內部團隊與合作衛生所/診所,兩者是同一條產品線的演進。</p>
+
+    <!-- 專案：PTH Bug Creator -->
+    <details class="project tool">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>PTH Bug Creator</h3>
+          <span class="proj-badge">跨院所 / 效率工具</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">網頁表單一鍵建立格式一致、指派正確的 Jira Bug 工單,支援多院所帳號登入,內部團隊與衛生所端都在用。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Python / Flask</span><span class="tag">Jira REST API</span><span class="tag">Render.com</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          回報 Bug 的人不只有內部 RD,還包括第一線使用系統的衛生所人員,大家原本都要手動登入 Jira 填寫,
+          標題格式不一致,也不知道該指派給誰。這個工具把整個流程做成一個網頁表單:選功能區塊、寫問題、貼截圖,
+          不管是內部同事還是院所端使用者,送出就直接變成一張格式一致、指派正確的 Jira 工單。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">院所帳號登入</span><span class="arrow">→</span>
+          <span class="step">選功能區塊</span><span class="arrow">→</span>
+          <span class="step">自動帶出負責窗口</span><span class="arrow">→</span>
+          <span class="step">格式化標題</span><span class="arrow">→</span>
+          <span class="step">建立 Jira 工單</span>
+        </div>
+
+        <div class="bugform-mockup-wrap">
+          <h5>[xHIS Cloud HIS] 問題回報</h5>
+          <p class="bf-sub">填寫表單後自動建立 Jira Bug,assign 給對應 RD</p>
+
+          <div class="bf-tabs">
+            <span class="bf-tab active">建立 Bug</span>
+            <span class="bf-tab">Free Test Bug</span>
+          </div>
+
+          <div class="bf-quick-box">
+            <div class="bf-quick-label">⚡ 快速建立 - 輸入一句話,AI 自動幫你填表</div>
+            <div class="bf-quick-row">
+              <div class="bf-quick-input">批價帳務不對</div>
+              <span class="bf-quick-btn">✨ AI 填表</span>
+            </div>
+
+            <div class="bf-ai-result">
+              <div class="bf-ai-label">AI 分析結果</div>
+              <div class="bf-ai-tags">
+                <span class="bf-ai-tag">缺少功能 - 批價系統</span>
+                <span class="bf-ai-tag mention">@ 通報視窗</span>
+              </div>
+              <div class="bf-ai-title">批價帳務異常</div>
+              <div class="bf-ai-body">
+                畫面:批價系統<br>
+                問題:批價帳務計算結果與實際不符。<br>
+                預期:批價帳務計算結果應與實際相符。<br>
+                實際:批價帳務計算結果出現異常,導致帳務不對。
+              </div>
+              <div class="bf-ai-actions">
+                <span class="bf-ai-btn primary">✓ 套用並填入表單</span>
+                <span class="bf-ai-btn send">⚡ 直接送出</span>
+                <span class="bf-ai-btn edit">✎ 套用後修改</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bf-fields">
+            <div class="bf-field-label">Requester</div>
+            <div class="bf-radio-row"><span>◉ 空白</span><span>○ 衛生所</span><span>○ Intern</span></div>
+
+            <div class="bf-field-label">Issue 類型</div>
+            <div class="bf-radio-row"><span>◉ Bug</span><span>○ Task</span></div>
+
+            <div class="bf-field-label">功能區塊 *</div>
+            <div class="bf-select-box">-- 選擇系統 --</div>
+          </div>
+
+          <div class="mockup-caption">介面示意圖 —— 一句話輸入後,AI 自動判斷功能區塊、產生結構化描述、@ 對應負責窗口</div>
+        </div>
+
+        <div class="tracker-mockup-wrap">
+          <div class="tracker-header">
+            <h5>麟洛衛生所 — 問題追蹤</h5>
+            <div class="th-btns">
+              <span class="tracker-btn primary">+ 回報新問題</span>
+              <span class="tracker-btn">登出</span>
+            </div>
+          </div>
+          <div class="tracker-filters">
+            <span class="tracker-filter active">全部</span>
+            <span class="tracker-filter">待處理</span>
+            <span class="tracker-filter">處理中</span>
+            <span class="tracker-filter">完成</span>
+          </div>
+
+          <div class="tracker-card">
+            <div class="tracker-card-top">
+              <span class="tracker-key">PTH-XXX</span>
+              <span class="tracker-type">Task</span>
+              <span class="tracker-title">[PTH Cloud HIS] 門診診間 - 病人清單 - 搜尋病人希望加入歷史就診紀錄功能</span>
+              <span class="tracker-status todo">待處理</span>
+            </div>
+            <div class="tracker-meta">Assignee: RD 窗口　建立:2026-07-10　更新:2026-07-14</div>
+            <div class="tracker-actions">
+              <span class="tracker-action-btn">留言 (0)</span>
+              <span class="tracker-action-btn">AI 摘要</span>
+            </div>
+          </div>
+
+          <div class="tracker-card">
+            <div class="tracker-card-top">
+              <span class="tracker-key">PTH-XXX</span>
+              <span class="tracker-type bug">Bug</span>
+              <span class="tracker-title">[PTH Cloud HIS] 列印 - 管制藥品專用處方簽誤印問題,待再提供案例</span>
+              <span class="tracker-status doing">處理中</span>
+            </div>
+            <div class="tracker-meta">Assignee: RD 窗口　建立:2026-07-07　更新:2026-07-14</div>
+            <div class="tracker-actions">
+              <span class="tracker-action-btn">留言 (5)</span>
+              <span class="tracker-action-btn">AI 摘要</span>
+            </div>
+            <div class="tracker-ai-summary">
+              <b>AI 摘要：</b>此 Bug 報告指出,系統在特定情境下即使未設定管制藥品級數,仍會印出管制藥品專用處方簽。
+              目前在測試環境皆正常,但正式環境存在此問題,開發團隊將進一步釐清正式環境下哪些藥品會出現此異常。
+            </div>
+          </div>
+
+          <div class="mockup-caption">介面示意圖 —— 票號與內容為示意用途,同事姓名已替換為「RD 窗口」</div>
+        </div>
+
+        <div class="impact-line">
+          <b>實際上線使用：</b>部署後同時供內部團隊與衛生所端使用,回報 Bug 不再需要另外詢問「這個問題要指派給誰」,
+          標題與內容格式也統一,方便後續搜尋與追蹤。
+        </div>
+
+        <div class="impact-line">
+          <b>近期更新:多院所帳號登入：</b>不同合作院所各自有獨立帳號密碼,登入後系統會自動帶入正確的「通報院所」欄位,
+          不用使用者自己選,也避免不同院所的回報混在一起分不清楚來源。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Python / Flask</span>
+          <span class="tag">Jira REST API</span>
+          <span class="tag">Render.com</span>
+          <span class="tag">Gunicorn</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>自動指派：</b>依「功能區塊」對照表自動帶出負責窗口,建立工單時直接設定 assignee,不用另外詢問。</li>
+            <li><b>相似 Bug 偵測：</b>輸入問題描述時,前端會在使用者停止打字後自動用 JQL 搜尋既有工單,即時提示「這個問題可能已經有人回報過」,避免重複開票。</li>
+            <li><b>多種截圖方式：</b>支援拖拉上傳,也支援 Ctrl+V / Cmd+V 直接貼上剪貼簿截圖,自動用時間戳記命名。</li>
+            <li><b>格式一致性：</b>標題固定格式(系統別 - 問題說明),描述轉換成 Jira 的 ADF 格式,確保每張工單長得一樣、好搜尋。</li>
+            <li><b>多院所帳號隔離：</b>每個合作院所有各自的登入密碼(透過環境變數設定,不寫死在程式裡),登入身份直接對應到 Jira 的通報院所欄位,從來源就分得清清楚楚。</li>
+            <li><b>AI Agent 類別自動分派：</b>新增「資料線上」這類跟 AI Agent 相關的問題分類,回報後會自動指派給專門的審查機制並打上對應標籤,反映系統本身也開始需要處理「AI 產生的內容/行為」這類新型態的問題回報。</li>
+            <li><b>跟 Bobi AI 共用通知管道：</b>設定檔跟 Teams 通知 webhook 現在跟 Bobi AI 共用一份,兩個系統的維運資訊統一在同個地方管理,不用各自維護一套。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">服務對象:內部團隊 + 合作衛生所/診所 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="relation-connector">
+      <span class="bend"></span>
+      <span>同一套 Jira 建票邏輯，重新設計成 LINE 對話介面，並疊加 AI 理解與問答能力 ↓</span>
+    </div>
+
+    <!-- 專案：Bobi AI -->
+    <details class="project tool">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>Bobi AI</h3>
+          <span class="proj-badge">跨院所 / AI 助理</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">供衛生所/診所端使用的 LINE 對話式 AI 助理:自然語言建 Bug + 知識庫問答,多層 fallback 確保高可用性。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">LINE Messaging API</span><span class="tag">Gemini API</span><span class="tag">Supabase</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          把上面的 Bug 回報工具搬進 LINE,變成一個會聊天的助理,主要服務對象是第一線的衛生所 / 診所人員。
+          使用者不用打開網頁填表單,直接在 LINE 對話就能建立 Bug、問問題,AI 會自動理解內容、分類、找到該處理的人。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">LINE 對話輸入</span><span class="arrow">→</span>
+          <span class="step">AI 理解 / 分類</span><span class="arrow">→</span>
+          <span class="step">預覽確認</span><span class="arrow">→</span>
+          <span class="step">建立工單 / 回覆答案</span>
+        </div>
+
+        <div class="bobi-chat-wrap">
+          <div class="bobi-chat-header">
+            <div class="bobi-avatar">🤖</div>
+            <div>
+              <div class="bc-name">Bobi</div>
+              <div class="bc-sub">xHIS Cloud HIS AI 助手</div>
+            </div>
+          </div>
+          <div class="bobi-chat-body">
+            <div class="bobi-msg bot">嗨!我是 Bobi,有關 Bug 回報或 xHIS Cloud HIS 系統的問題都可以問我喔!</div>
+            <div class="bobi-msg user">舊系統代碼設定新系統要怎麼用</div>
+            <div class="bobi-msg bot">
+              您好!關於舊系統代碼在新系統的對應,您可以參考以下說明:<br><br>
+              <b>1. 慢性病照護計畫(DM, CKD, DKD, TB)</b><br>
+              舊代碼與新系統的第一層分類 / 第二層時程代碼皆有對應規則……<br><br>
+              若操作上遇到困難,或有其他舊代碼的轉換問題,都歡迎隨時提出,我會盡力協助您!
+            </div>
+            <span class="bobi-feedback-btn">✓ 已回報</span>
+          </div>
+          <div class="bobi-chat-input">
+            <div class="bi-box">問 Bobi 任何問題…</div>
+            <div class="bobi-send-btn">➤</div>
+          </div>
+        </div>
+        <p class="mockup-caption" style="margin:-10px 0 20px;">介面示意圖 —— 對話內容為實際功能示意,答案已縮短呈現</p>
+
+        <div class="faq-admin-wrap">
+          <div class="faq-admin-back">← 問題回報</div>
+          <h5>Bobi FAQ Admin</h5>
+          <p class="faq-admin-sub">管理 FAQ 知識庫與查看使用者回報</p>
+          <div class="faq-tabs">
+            <span class="faq-tab active">使用者回報</span>
+            <span class="faq-tab">FAQ 知識庫</span>
+            <span class="faq-tab">新增 FAQ</span>
+          </div>
+          <div class="faq-report-card">
+            <div class="faq-q">Q: 舊系統代碼設定新系統要怎麼用</div>
+            <div class="faq-a">
+              AI 回答:您好!關於舊系統代碼在新系統的對應,您可以參考以下說明:
+              <table>
+                <tr><th>舊代碼</th><th>舊名稱</th><th>第一層分類</th><th>第二層時程代碼</th><th>第二層時程名稱</th></tr>
+                <tr><td>6a</td><td>DM 初診照護</td><td>20 - 糖尿病</td><td>E1</td><td>糖尿病照護網——新收案評估</td></tr>
+                <tr><td>6b</td><td>DM 定期複診</td><td>20 - 糖尿病</td><td>E2</td><td>糖尿病照護網——常規追蹤(每季)</td></tr>
+                <tr><td>6s</td><td>CKD 收案照護</td><td>21 - 初期CKD</td><td>K1</td><td>慢性腎臟病——新收案評估</td></tr>
+                <tr><td>6g</td><td>TB 第一階段</td><td>23 - 結核病(TB)</td><td>T1</td><td>結核病計畫——新收案管理</td></tr>
+              </table>
+              (完整對照表涵蓋慢性病照護、癌症篩檢、疫苗注射戒菸、婦幼成人健檢共 4 大類、逾 30 組代碼對應……節錄)
+            </div>
+          </div>
+          <p class="mockup-caption" style="margin-top:14px;">介面示意圖 —— 管理員可在此檢視使用者問過的問題與 AI 回答內容,決定是否收錄進 FAQ 知識庫</p>
+        </div>
+
+        <h4 class="subhead">兩個核心功能</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-logic">對話建 Bug</span></td><td>使用者用自然語言描述問題(可搭配截圖),AI 自動整理成結構化標題與描述,分類到對應功能與負責窗口,確認後一鍵送出</td></tr>
+          <tr><td><span class="scope-pill scope-ops">Bobi 問答</span></td><td>使用者直接在 LINE 問問題,先比對內建知識庫,沒有答案再交給 AI 回答,答錯或沒幫助時會記錄下來並通知管理員</td></tr>
+        </table>
+
+        <h4 class="subhead">知識庫組成</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          Bobi 回答問題時,會先比對下面三層內容,命中就直接回覆(不用消耗 AI token),都沒命中才交給 AI 生成答案：
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">常見問答</span></td><td>內建 FAQ 資料庫,累積使用者實際問過、確認有幫助的問答,是回應最快的第一層</td></tr>
+          <tr><td><span class="scope-pill scope-code">健保設定主檔</span></td><td>案件分類、部分負擔、慢箋假期、預防保健、論質計酬等健保設定規則的結構化知識</td></tr>
+          <tr><td><span class="scope-pill scope-logic">政府法規查詢</span></td><td>健保署 / 國健署 / 疾管署最新公告,並自動判斷每則公告跟系統的相關程度</td></tr>
+        </table>
+
+        <h4 class="subhead">「沒幫助」回饋機制</h4>
+        <div class="pipeline">
+          <span class="step">使用者標記沒幫助</span><span class="arrow">→</span>
+          <span class="step">記錄問答內容</span><span class="arrow">→</span>
+          <span class="step">通知管理員</span><span class="arrow">→</span>
+          <span class="step">人工補充答案</span><span class="arrow">→</span>
+          <span class="step">同類問題下次直接命中</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">
+          每一次「沒幫助」都不會被浪費 —— 問答內容會存起來讓管理員檢視,補上正確答案後,
+          知識庫就多學會一題,長期下來 AI 需要處理的比例會越來越低。
+        </p>
+
+        <h4 class="subhead">AI 無法使用時的處理</h4>
+        <div class="pipeline">
+          <span class="step">主要模型</span><span class="arrow">→</span>
+          <span class="step">備援模型 A</span><span class="arrow">→</span>
+          <span class="step">備援模型 B</span><span class="arrow">→</span>
+          <span class="step">備援供應商</span><span class="arrow">→</span>
+          <span class="step">全部失敗 → 通知管理員</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">
+          回答問題時會依序嘗試多個模型,前面的沒回應就換下一個,盡量不讓使用者感覺到系統在「重試」。
+          如果所有選項都失敗,不會讓使用者收到看不懂的錯誤訊息,而是直接通知管理員介入處理,
+          確保問題不會憑空消失在系統裡。
+        </p>
+
+        <div class="impact-line">
+          <b>高可用性設計：</b>知識庫優先、AI 備援其次、人工兜底最後,三層架構讓系統不會因為單一環節失效就整個「不會回話」。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Python / Flask</span>
+          <span class="tag">LINE Messaging API</span>
+          <span class="tag">Gemini API</span>
+          <span class="tag">Groq API</span>
+          <span class="tag">Supabase</span>
+          <span class="tag">Render.com</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>不依賴現成 SDK：</b>直接用 hmac 驗簽 + requests 呼叫 LINE API,對整個 webhook 流程有完全的掌控權,方便客製化互動邏輯。</li>
+            <li><b>多層 AI fallback：</b>多個語言模型依序嘗試(先快後穩),任一層有效回應就直接使用,全部失敗才會通知管理員介入,兼顧回應速度與穩定性。</li>
+            <li><b>狀態化對話：</b>用簡單的狀態機管理「等待描述 / 等待確認」等對話階段,使用者可以先傳圖再打字、或先打字再補圖,順序不限。</li>
+            <li><b>資料持久化：</b>使用者(含所屬衛生所/診所)設定、FAQ 知識庫、無法解決的問題回報都存進資料庫,不會因為服務重新部署而遺失,這是從舊版「存在本機檔案」的做法改過來的重要修正。</li>
+            <li><b>輕量選單設計：</b>用 LINE 的 4 宮格圖文選單取代文字指令,降低使用門檻,不需要記住任何指令關鍵字。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">服務對象:合作衛生所/診所 · 無公開 Demo</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 分類三：PM 工具鏈                                            -->
+  <!-- ============================================================ -->
+  <section class="category subpanel" id="cat-pm-skills">
+    <div class="category-head">
+      <span class="cat-dot pm"></span>
+      <h2>PM 工具鏈</h2>
+      <span class="count">(3)</span>
+    </div>
+    <p class="category-note">自己開發的一整套 AI Skills,用來加速 PRD 撰寫、驗證與交付,不是單一工具,而是一條完整的生產線。</p>
+
+    <!-- 專案：PRD 生產力 AI Skills 工具鏈 -->
+    <details class="project pm">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>PRD 生產力 AI Skills 工具鏈</h3>
+          <span class="proj-badge">PM 工具 / AI Skills</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">9 個自研 AI Skills,涵蓋 PRD 寫作、驗證、資料設計、發布,實測初稿撰寫效率提升 75%,需求變更效率提升 92%。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Custom AI Skills</span><span class="tag">Markdown / Mermaid</span><span class="tag">多角色 AI 驗證</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          PRD 撰寫其實有很多重複性的工程問題:每個人寫法不一致、改一小段話結果 AI 把整篇重寫壞掉、
+          寫完沒人有系統地審查、資料表設計格式各家不同。與其每次都手動處理,我把這些痛點各自封裝成專用的 AI Skill,
+          串起來就是一條從「寫」到「驗」到「發布」的 PRD 生產線。
+        </p>
+
+        <h4 class="subhead">整體成效(以一份 981 行 PRD 為實測對象)</h4>
+        <table class="stat-table">
+          <tr><th>階段</th><th>傳統做法</th><th>用 Skills 之後</th></tr>
+          <tr><td class="metric-name">初稿撰寫</td><td class="before">4–5 天</td><td class="after">1 天(約 6 小時)—— 效率提升 75%</td></tr>
+          <tr><td class="metric-name">流程圖繪製 / 修改</td><td class="before">4–6 小時,單次修改再 30–60 分</td><td class="after">30 分鐘產出,單次修改 1–5 分鐘</td></tr>
+          <tr><td class="metric-name">需求範圍變更</td><td class="before">3–3.5 小時,遺漏率 15–20%</td><td class="after">15 分鐘,零遺漏 —— 效率提升 92%</td></tr>
+          <tr><td class="metric-name">格式一致性</td><td class="before">約 60%(因人而異)</td><td class="after">100%(Markdown 強制規範)</td></tr>
+        </table>
+
+        <h4 class="subhead">九個 Skill,四大類</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-logic">寫作</span></td><td><b>write-prd</b>:自動生成標準化 PRD 章節,結構一致,減少從零撰寫的時間;<b>update-prd</b>:針對特定段落精確修改,避免 AI 把整篇重寫並產生幻覺內容</td></tr>
+          <tr><td><span class="scope-pill scope-code">驗證</span></td><td><b>validate-prd</b>:6 個角色(業分/架構師/RD/QA/DBA/PM)交叉審查;<b>prd-role-play</b>:AI 扮演第一線人員找出「太綁定單一個案」的邏輯;<b>scenario-test-prd</b>:用實際情境跑一遍計價邏輯,自動產生測試案例;<b>audit-data-model</b>:比對程式碼與資料庫,確保資料定義沒有脫節;<b>ui-preview / validate-ui-element</b>:自動擷取 UI 屬性生成規格表</td></tr>
+          <tr><td><span class="scope-pill scope-price">資料設計</span></td><td><b>design-xhis-datanode</b>:標準化資料節點規格格式,統一欄位命名、型別、基數定義</td></tr>
+          <tr><td><span class="scope-pill scope-ops">發布</span></td><td><b>publish-to-confluence</b>:一鍵把 Markdown PRD 轉成 Confluence 頁面,自動處理圖片與 Mermaid 圖表</td></tr>
+        </table>
+
+        <h4 class="subhead">實測案例:移除「欠卡/補卡」功能</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          客戶決定將某功能從規格中整個移除,牽動系統描述、3 張流程圖、17 個 Use Case、資料模型表格:
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">傳統做法</span></td><td>Word 全文搜尋 → 逐一檢視 → 手動改文字 → 重繪 Visio 流程圖 → 手動重新編號 Use Case → 人工交叉驗證,共 3–3.5 小時,實測遺漏率約 15–20%</td></tr>
+          <tr><td><span class="scope-pill scope-logic">用 Skills</span></td><td>Regex 系統化搜尋定位 20+ 處 → 批量修改 14 處 Use Case → Mermaid 程式碼直接刪節點 → 自動化重新編號 → 再次搜尋驗證零殘留,共 15 分鐘,零遺漏</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>成本效益已算過,不是感覺良好而已：</b>每個 Skill 建置都要花 4–12 小時前期投入,但單次使用只要 1–15 分鐘;
+          以 write-prd 為例,通常第 3 份文件就打平了建置成本,之後每份都是淨賺。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Custom AI Skills</span>
+          <span class="tag">Markdown / Mermaid</span>
+          <span class="tag">多角色 AI 驗證</span>
+          <span class="tag">Git 版本控制</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>「微創手術」式修改：</b>update-prd 只針對指定段落動刀,不會像直接丟給通用 LLM 那樣整篇重寫、掉內容或生成幻覺文字。</li>
+            <li><b>多角色審查用免費資源做到：</b>validate-prd 用 Google Gemini API 模擬 6 個專業角色的審閱會議,不用真的排開 6 個人的時間開會。</li>
+            <li><b>三種驗證各司其職：</b>validate-prd 做技術面審查(資料表、API、測試案例);prd-role-play 做業務面審查(是否太綁定單一個案、實務可行性);scenario-test-prd 做動態驗證(拿真實情境跑一遍計價邏輯),三者互補不重複。</li>
+            <li><b>資料流向就是契約：</b>design-xhis-datanode 產出的規格文件,被視為 PRD 與程式碼之間的正式契約,前後端跟資料庫團隊都以此為準,減少 API 設計階段的溝通成本。</li>
+            <li><b>跟其他專案共用基礎設施：</b>這套 Skills 產出的 PRD,正是「PRD 規格問答機器人(qa:/qac:)」搜尋的文件來源之一,兩邊互相銜接。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部技能 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="relation-connector">
+      <span class="bend"></span>
+      <span>延伸自其中的 ui-preview,從「擷取欄位規格」進化成「產生完整介面概念圖」↓</span>
+    </div>
+
+    <!-- 專案：PRD → UI 概念圖產生器 -->
+    <details class="project pm">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>PRD → UI 概念圖產生器(ui-preview)</h3>
+          <span class="proj-badge">PM 工具 / UI 溝通</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">從 PRD 及法規文件直接產生介面概念圖與規格文件,結合部門既有系統的視覺語言,溝通起來不用再靠想像。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">ui-preview</span><span class="tag">Mermaid 流程圖</span><span class="tag">視覺一致性</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          PRD 文字寫得再清楚,RD 跟 UX 設計師光看文字還是很難一次抓到腦中的畫面,常常要來回好幾輪才把介面對齊,
+          需求缺漏也常常要等做到一半才被發現。這個技能讓我可以把 PRD 跟相關的法規/規格文件丟進去,
+          直接產出一份完整的介面概念設計文件 —— 不只是文字描述,而是包含畫面佈局、欄位規則、互動流程的具體規格。
+          因為結合了部門既有系統的視覺語言(guideline)跟命名慣例,產出的畫面會長得像「我們自己的系統」,
+          不是通用的 AI 生成介面,溝通起來更直接、更容易對齊。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">讀取 PRD / 法規文件</span><span class="arrow">→</span>
+          <span class="step">比對既有系統視覺參照</span><span class="arrow">→</span>
+          <span class="step">產出畫面規格 + 流程圖</span><span class="arrow">→</span>
+          <span class="step">附文案規範</span>
+        </div>
+
+        <h4 class="subhead">一份概念圖裡有什麼</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">設計概念摘要</span></td><td>一句話描述這個畫面在解決什麼問題,並點出核心設計原則(例如「誠實反映資料狀態」「減少使用者讀心負擔」)</td></tr>
+          <tr><td><span class="scope-pill scope-code">視覺參照</span></td><td>對照既有系統裡風格相近的畫面,標注要沿用哪些版型與元件樣式,確保產出貼近自家系統長相,不是憑空生成</td></tr>
+          <tr><td><span class="scope-pill scope-logic">詳細畫面規格</span></td><td>逐欄位列出型別、預設值、必填與驗證規則,RD 可以直接對照開發,不用再回頭問「這欄要不要驗證」</td></tr>
+          <tr><td><span class="scope-pill scope-ops">互動流程圖</span></td><td>用 Mermaid 畫出狀態流轉與操作分支,一眼看懂「什麼情況下會出現什麼畫面」</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>一份文件同時做三件事：</b>跟使用者確認「介面大概長這樣對不對」、跟 UX 設計師講「我要的是這種感覺」、
+          跟 RD 對齊欄位規則,省下原本要分開溝通三次、各自表達不清楚的來回成本。
+        </div>
+
+        <h4 class="subhead">實測案例:成人預防保健 UI 重新設計(114 年版)</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          舊版介面是直接把桌面應用程式(WinForms)的畫面原封不動搬到網頁,對照最新官方文件後,發現好幾個問題:
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">範疇混淆</span></td><td>舊版混入不屬於成人健檢的四癌篩檢項目,官方申報格式裡根本沒有這個欄位</td></tr>
+          <tr><td><span class="scope-pill scope-code">新制欄位遺漏</span></td><td>114 年新增的尿酸、腎病識能、風險評估等欄位,舊版完全沒有對應</td></tr>
+          <tr><td><span class="scope-pill scope-code">單位不一致</span></td><td>腰圍舊版仍支援「吋/公分」擇一,但 114 年新制已統一為公分</td></tr>
+        </table>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">
+          這些問題都是在概念圖階段對照官方文件時發現的,而不是等系統做完申報才被退件。
+        </p>
+
+        <div class="impact-line">
+          <b>其中一次甚至部署成公開連結給團隊直接看：</b>兒童發展篩檢的介面概念圖曾經部署成一個可以直接點開的網頁預覽,
+          讓相關人員不用裝任何軟體、不用等排會議,點連結就能看到畫面長怎樣。
+        </div>
+
+        <div class="tags">
+          <span class="tag">ui-preview</span>
+          <span class="tag">Mermaid 流程圖</span>
+          <span class="tag">視覺一致性</span>
+          <span class="tag">資料節點對照</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>視覺參照不是憑空生成：</b>產出前會先在既有系統畫面庫裡找風格相近的案例,標注要沿用的版型特徵,讓輸出的介面感覺是「同一個系統長出來的」,而不是每次風格都不一樣的通用 AI 介面。</li>
+            <li><b>畫面背後接資料節點：</b>每個 UI 欄位或狀態標籤都會對應到實際的資料庫欄位與判定邏輯(例如某個狀態依賴哪個欄位的長度或值來判斷),確保畫面不只是美編稿,底層邏輯也一併想清楚。</li>
+            <li><b>文案規範內建：</b>套用固定的語氣方針(例如「無道歉語氣」原則)與術語對照表,避免不同 PRD 產出的畫面用詞、口吻不一致。</li>
+            <li><b>用在對的時間點：</b>通常在 PRD 初稿完成、RD 還沒開工前使用,概念圖能提早攔住「這個欄位漏了定義」「這個狀態沒講清楚」這類需求缺口,而不是等開發到一半才發現要改。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部技能 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <!-- 專案：BillingLogic PRD 雙軌驗證法 -->
+    <details class="project pm">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>BillingLogic PRD 雙軌驗證法</h3>
+          <span class="proj-badge">PM 工具 / 規格驗證</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">PRD 寫完不是結束 —— 用真實收據跟歷史資料反過來驗證計價規格寫得對不對。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">規格驗證</span><span class="tag">AI 讀圖比對</span><span class="tag">歷史資料回測</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          計價邏輯(BillingLogic Spec)規格複雜,光靠人工看文件很難確定「這條規則是不是真的寫對了」。
+          與其等系統上線後才發現金額算錯,我建立了兩種方法把 PRD 拿去跟現實對照:
+          一種是丟一張收據圖片就能快速抽查;另一種是把規格轉成腳本,拿歷史資料大規模回測。兩種一快一廣,互相補位。
+        </p>
+
+        <h4 class="subhead">兩種驗證方式</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">收據驗證</span></td><td>貼一張收據圖片說「驗收這張收據」,AI 讀取欄位,逐項對照 BillingLogic Spec 的對應章節,依紅旗清單抓漏洞,回報「通過 / 不符 / 無法確認」並標出章節出處 —— 適合快速抽查單筆</td></tr>
+          <tr><td><span class="scope-pill scope-logic">歷史資料驗證</span></td><td>把規格轉成驗證腳本,對資料庫裡的歷史就診紀錄批次重新計算期望金額,跟實際儲存的金額比對,輸出 PASS / FAIL 與差異明細 —— 適合大規模掃描,抓系統性錯誤</td></tr>
+        </table>
+
+        <div class="billing-mockup-wrap">
+          <div class="billing-mockup-header">
+            <h5>批價收據比對報告</h5>
+            <div class="bm-meta">日期範圍:2026-07-02 ~ 2026-07-02　容差:±0.01　產生時間:2026-07-06 15:35</div>
+          </div>
+          <div class="billing-mockup-stats">
+            <div class="bs"><div class="bs-num">87</div><div class="bs-label">掃描檔案數</div></div>
+            <div class="bs"><div class="bs-num green">6</div><div class="bs-label">相符</div></div>
+            <div class="bs"><div class="bs-num red">29</div><div class="bs-label">不符</div></div>
+            <div class="bs"><div class="bs-num">2</div><div class="bs-label">查無 target 資料</div></div>
+            <div class="bs"><div class="bs-num">50</div><div class="bs-label">跳過(ETL 未抽換)</div></div>
+            <div class="bs"><div class="bs-num">0</div><div class="bs-label">排除(totalAmount=0)</div></div>
+          </div>
+          <div class="billing-mockup-body">
+
+            <div class="billing-record">
+              <div class="billing-record-head">
+                <span class="billing-badge fail">不符</span>
+                <span class="billing-record-id">O2026070200099(示意)</span>
+                <span class="billing-record-meta">病患資訊已遮蔽</span>
+              </div>
+              <table class="billing-field-table">
+                <tr style="background:#f9fafb;"><td style="font-weight:600;color:#6b7280;">欄位</td><td style="font-weight:600;color:#6b7280;">Legacy</td><td style="font-weight:600;color:#6b7280;">xHIS</td><td style="font-weight:600;color:#6b7280;">結果</td></tr>
+                <tr><td>費用總額</td><td>861.00</td><td>861.00</td><td class="result-same">相同</td></tr>
+                <tr><td>健保總額</td><td>811.00</td><td>811.00</td><td class="result-same">相同</td></tr>
+                <tr><td>部分負擔</td><td>50.00</td><td>50.00</td><td class="result-same">相同</td></tr>
+                <tr class="diff-row"><td>案件代碼</td><td>E1</td><td>09</td><td class="result-diff">不同</td></tr>
+                <tr><td>診察費醫令代碼</td><td>00158C</td><td>00158C</td><td class="result-same">相同</td></tr>
+                <tr class="skip-row"><td>同日同醫生人次(推算)</td><td>44</td><td>4</td><td class="result-skip">略過(已知差異)</td></tr>
+              </table>
+            </div>
+
+            <div class="billing-record">
+              <div class="billing-record-head">
+                <span class="billing-badge pass">相符</span>
+                <span class="billing-record-id">O2026070200001(示意)</span>
+                <span class="billing-record-meta">病患資訊已遮蔽</span>
+              </div>
+              <table class="billing-field-table">
+                <tr style="background:#f9fafb;"><td style="font-weight:600;color:#6b7280;">欄位</td><td style="font-weight:600;color:#6b7280;">Legacy</td><td style="font-weight:600;color:#6b7280;">xHIS</td><td style="font-weight:600;color:#6b7280;">結果</td></tr>
+                <tr><td>費用總額</td><td>447.00</td><td>447.00</td><td class="result-same">相同</td></tr>
+                <tr><td>健保總額</td><td>397.00</td><td>397.00</td><td class="result-same">相同</td></tr>
+                <tr><td>部分負擔</td><td>50.00</td><td>50.00</td><td class="result-same">相同</td></tr>
+                <tr class="skip-row"><td>案件代碼</td><td>04</td><td>09</td><td class="result-skip">略過(已知差異)</td></tr>
+                <tr><td>診察費醫令代碼</td><td>00110C</td><td>00110C</td><td class="result-same">相同</td></tr>
+                <tr class="skip-row"><td>同日同醫生人次(推算)</td><td>30</td><td>2</td><td class="result-skip">略過(已知差異)</td></tr>
+              </table>
+            </div>
+
+          </div>
+          <div class="mockup-caption">介面示意圖 —— 病患個資(身分證字號/病歷號/就診序號)已全部替換為假資料,非真實病患資訊</div>
+        </div>
+
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;">
+          「略過(已知差異)」是這個工具的一個重要設計:有些欄位(例如案件代碼、同日同醫生人次)是 Legacy 系統跟 xHIS
+          本來就用不同邏輯計算,這種差異是「已知且可接受」的,不該被當成 Bug 一直跳出來干擾視線。
+          只有真正代表計算邏輯有問題的差異(例如金額不符),才會被標記成「不符」需要處理。
+        </p>
+
+        <h4 class="subhead">驗證點對照範例</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">A.11.1</span></td><td>金額公式一致性 —— 應繳總額是否等於自費+部分負擔+掛號費-折扣</td></tr>
+          <tr><td><span class="scope-pill scope-code">A.2.1</span></td><td>公立機構(衛生所)掛號費是否為 0</td></tr>
+          <tr><td><span class="scope-pill scope-code">A.3 Step1</span></td><td>特定案件分類(慢箋領藥等)是否正確跳過診察費</td></tr>
+          <tr><td><span class="scope-pill scope-code">902 / 903</span></td><td>未滿 3 歲或出生 60 天內,部分負擔是否正確全免</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>差異一律能追回具體規格章節：</b>不是抽象地說「金額不對」,而是直接標出對應到 Spec 的哪一條規則,
+          能立刻判斷是規格本身寫錯,還是 RD 實作跟規格對不上。
+        </div>
+
+        <div class="tags">
+          <span class="tag">規格驗證</span>
+          <span class="tag">AI 讀圖比對</span>
+          <span class="tag">歷史資料回測</span>
+          <span class="tag">BillingLogic Spec</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>收據判讀的隱藏知識：</b>例如項目名稱前面有「*」代表院外代檢、健保點數應為 0;項目列最後面有「*」代表自費項目。這類讀圖技巧不是每個人一看就懂,寫進固定流程後就能重複使用、不用每次重新摸索。</li>
+            <li><b>歷史資料驗證的具體做法：</b>從歷史就診紀錄取出案件分類、免除身分、就醫日期、出生日期與醫令清單,依 Spec 規則重新計算期望金額,再跟資料庫實際儲存的帳務/付款金額比對,輸出通過/失敗與差異明細。</li>
+            <li><b>紅旗清單聚焦高風險情境：</b>公立機構掛號費、戒菸案件部分負擔全免、慢箋領藥跳過診察費、未滿 3 歲部分負擔全免等,這些是實際盤點下來最常出現規格與實作對不上的地方,優先檢查投報率最高。</li>
+            <li><b>兩種方法互補使用：</b>收據法反應快,適合日常抽查個案;歷史資料法能大規模掃描,適合抓系統性、批量性的計價錯誤,兩者搭配使用覆蓋率更完整。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部方法論 · 無公開 Demo</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 分類四：策略規劃                                              -->
+  <!-- ============================================================ -->
+  <section class="category subpanel" id="cat-strategy">
+    <div class="category-head">
+      <span class="cat-dot strategy"></span>
+      <h2>策略規劃</h2>
+      <span class="count">(2)</span>
+    </div>
+    <p class="category-note">不是工具,是分析與規劃的產出 —— 導入前先搞清楚現況,做功能決策前先排清楚優先序。</p>
+
+    <!-- 專案：屏東縣衛生所需求盤點分析報告 -->
+    <details class="project strategy">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>屏東縣衛生所需求盤點分析報告</h3>
+          <span class="proj-badge">策略 / 市場分析</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">盤點 36 間衛生所的系統使用現況與痛點,排出四階段導入優先序;另外做了互動工具可切換比較模式或列表模式查原始資料。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">需求盤點</span><span class="tag">優先序排定</span><span class="tag">導入風險評估</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          導入新系統前,得先搞清楚客戶現況。這份分析針對屏東縣 36 間衛生所的問卷回覆,系統性盤點現有 HIS 廠商分佈、
+          核心模組使用率、實際痛點,依「缺了會不會停擺」跟「影響所數」排出四階段優先序,
+          作為分階段上線的具體依據,而不是憑感覺猜哪個功能重要、哪個可以晚點做。
+        </p>
+
+        <h4 class="subhead">現況盤點重點</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">現有系統</span></td><td>近 7 成衛生所使用 PHIS/厚生系統,遷移時「資料轉換」與「操作習慣」是最大挑戰,不是功能本身</td></tr>
+          <tr><td><span class="scope-pill scope-price">核心模組</span></td><td>門診醫令 94%、門診申報 89%、批價 81% 使用率 —— 這三項定義為 P0 必備,缺一項就無法正常營運</td></tr>
+          <tr><td><span class="scope-pill scope-logic">高頻痛點</span></td><td>系統效能慢/網路不穩(6+ 所)、多系統切換(5+ 所)、健保卡與疫苗系統讀卡衝突(3+ 所)排名前三</td></tr>
+        </table>
+
+        <h4 class="subhead">不只是一份報告,還做了互動比對工具</h4>
+        <p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 8px;">
+          36 份問卷回覆是原始素材,靜態報告寫的是分析結論。中間這段「怎麼從原始資料看出結論」的過程,
+          我額外做了一個小工具,讓後續想自己核對細節的人(或未來加入的同事)不用重新啃一次 36 份問卷,
+          有兩種瀏覽方式可以選:
+        </p>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-logic">比較模式</span></td><td>用篩選標籤(山地離島 / PHIS厚生用戶 / 大同用戶 / 明確表達離線需求)跟關鍵字搜尋縮小範圍,勾選 2～4 間衛生所加入比較,下方自動產生逐項對照表,相同的模組會用不同標記跟「只看有差異的項目」比對出來,一眼看出哪些所的需求是共通的、哪些是特例</td></tr>
+          <tr><td><span class="scope-pill scope-ops">列表模式</span></td><td>左側是可搜尋的全部衛生所清單,點一所就在右側看到該所完整的問卷回覆內容(HIS 模組、藥局、疫苗、離線需求、痛點與期待等全部欄位),適合要深入了解單一衛生所細節的時候用</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>設計上刻意做「只看差異」開關：</b>36 所之間相同的地方遠比不同的地方多,如果每個欄位都攤開來看,
+          真正有意義的差異反而會被大量重複資訊淹沒。這個開關讓比較表可以一鍵切換成只顯示「這幾所答案不一樣」的欄位,
+          決策討論時更容易聚焦在真正需要拍板的地方。
+        </div>
+
+        <div class="dossier-mockup">
+          <div class="dossier-header">
+            <div class="dossier-eyebrow">PTH 需求盤點 · Verified 2026</div>
+            <h5>屏東縣衛生所需求盤點比對室</h5>
+            <p class="dossier-sub">36 份問卷、33 所衛生所的原始回覆,整理成可搜尋、可勾選比較的案卷卡。點選任意 2～4 所,下方會展開逐項對照表,差異處會蓋上「異」章。</p>
+            <div class="dossier-stamp">PTH<br>需求盤點<br><span style="font-size:7.5px;">VERIFIED 2026</span></div>
+          </div>
+
+          <div class="dossier-tabs">
+            <span class="dossier-tab active">案卷比對</span>
+            <span class="dossier-tab">衛生所列表</span>
+          </div>
+
+          <div class="dossier-toolbar">
+            <div class="dossier-search">🔍 搜尋衛生所名稱、廠商、痛點關鍵字…</div>
+            <span class="dossier-chip">山地離島</span>
+            <span class="dossier-chip">PHIS / 厚生用戶</span>
+            <span class="dossier-chip">大同用戶</span>
+            <span class="dossier-chip">明確表達離線需求</span>
+            <span class="dossier-result">找到 33 / 33 所</span>
+          </div>
+
+          <div class="dossier-grid">
+            <div class="dossier-card">
+              <div class="idno">CASE #01 · 大同</div>
+              <h6>春日衛生所</h6>
+              <span class="dossier-badge">6 項主體模組</span>
+            </div>
+            <div class="dossier-card">
+              <div class="idno">CASE #03 · PHIS</div>
+              <h6>南州鄉衛生所</h6>
+              <span class="dossier-badge">10 項主體模組</span>
+            </div>
+            <div class="dossier-card selected">
+              <div class="idno">CASE #05 · PHIS</div>
+              <h6>麟洛鄉衛生所</h6>
+              <span class="dossier-badge">4 項主體模組</span>
+            </div>
+            <div class="dossier-card">
+              <div class="idno">CASE #09 · 厚生資訊公司</div>
+              <h6>車城鄉衛生所</h6>
+              <span class="dossier-badge">20 項主體模組</span>
+            </div>
+          </div>
+
+          <div class="dossier-tray">
+            <span class="dossier-tray-label">比較卡匣(最多 4 所)</span>
+            <span class="dossier-tray-chip">麟洛鄉 ×</span>
+            <span class="dossier-tray-chip">屏東縣萬丹鄉 ×</span>
+            <span class="dossier-tray-chip">九如鄉 ×</span>
+          </div>
+
+          <div class="dossier-ledger">
+            <h6>逐項對照 · <span class="n">麟洛鄉 vs 屏東縣萬丹鄉 vs 九如鄉</span></h6>
+            <table class="dossier-ledger-table">
+              <tr><th>比對項目</th><th>麟洛鄉衛生所</th><th>屏東縣萬丹鄉衛生所</th><th>九如鄉衛生所</th></tr>
+              <tr>
+                <td class="rowlabel">目前 HIS 廠商 <span class="dossier-diff-mark">異</span></td>
+                <td>PHIS</td><td>厚生 / 厚生國際</td><td>厚生醫療作業系統</td>
+              </tr>
+              <tr>
+                <td class="rowlabel">是否屬山地離島衛生所</td>
+                <td>否</td><td>否</td><td>否</td>
+              </tr>
+              <tr>
+                <td class="rowlabel">HIS 主體系統模組 <span class="dossier-diff-mark">異</span></td>
+                <td><span class="dossier-pill uniq">衛教系統</span><span class="dossier-pill">門診醫令系統</span><span class="dossier-pill">批價系統</span><span class="dossier-pill">門診申報系統</span></td>
+                <td><span class="dossier-pill">門診醫令系統</span><span class="dossier-pill uniq">藥局系統</span><span class="dossier-pill uniq">櫃檯掛號系統</span><span class="dossier-pill">批價系統</span><span class="dossier-pill">門診申報系統</span><span class="dossier-pill uniq">檢驗系統</span></td>
+                <td><span class="dossier-pill">門診醫令系統</span><span class="dossier-pill uniq">藥局系統</span><span class="dossier-pill uniq">櫃檯掛號系統</span><span class="dossier-pill">批價系統</span><span class="dossier-pill uniq">電子病歷系統</span></td>
+              </tr>
+              <tr>
+                <td class="rowlabel">介接系統 <span class="dossier-diff-mark">異</span></td>
+                <td><span class="dossier-pill">健保IC卡每日上傳</span><span class="dossier-pill uniq">NIIS疫苗注射系統</span></td>
+                <td><span class="dossier-pill">健保IC卡每日上傳</span><span class="dossier-pill uniq">雲端藥歷查詢系統</span></td>
+                <td><span class="dossier-pill">健保IC卡每日上傳</span></td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="dossier-caption">介面示意圖(比較模式)—— 還原「案卷比對室」實際版面,衛生所為公開機關名稱,無個資疑慮</div>
+        </div>
+
+        <div class="dossier-mockup">
+          <div class="dossier-tabs" style="border-bottom:1px solid #c9c2a8;">
+            <span class="dossier-tab">案卷比對</span>
+            <span class="dossier-tab active">衛生所列表</span>
+          </div>
+          <div class="dossier-toolbar" style="padding-bottom:0;">
+            <div class="dossier-search" style="flex:1 1 100%;">🔍 搜尋衛生所名稱、廠商、關鍵字…</div>
+          </div>
+          <div class="dossier-list-wrap">
+            <div class="dossier-list-sidebar">
+              <div class="dossier-list-item active"><span>春日衛生所</span><span class="idno">#01</span></div>
+              <div class="dossier-list-item"><span>內埔鄉衛生所</span><span class="idno">#02</span></div>
+              <div class="dossier-list-item"><span>南州鄉衛生所</span><span class="idno">#03</span></div>
+              <div class="dossier-list-item"><span>鹽埔鄉衛生所</span><span class="idno">#04</span></div>
+              <div class="dossier-list-item"><span>麟洛鄉衛生所</span><span class="idno">#05</span></div>
+              <div class="dossier-list-item"><span>獅子鄉衛生所</span><span class="idno">#06</span></div>
+              <div class="dossier-list-item"><span>長治鄉衛生所</span><span class="idno">#07</span></div>
+              <div class="dossier-list-item"><span>新埤鄉衛生所</span><span class="idno">#08</span></div>
+              <div class="dossier-list-item"><span>車城鄉衛生所</span><span class="idno">#09</span></div>
+            </div>
+            <div class="dossier-detail">
+              <h6>春日衛生所</h6>
+              <div class="dossier-detail-meta">CASE #01 · HIS 廠商:大同</div>
+
+              <div class="dossier-detail-field">
+                <div class="lbl">目前 HIS 廠商</div>
+                <div class="val">大同</div>
+              </div>
+              <div class="dossier-detail-field">
+                <div class="lbl">是否屬山地離島衛生所</div>
+                <div class="val">否</div>
+              </div>
+              <div class="dossier-detail-field">
+                <div class="lbl">HIS 主體系統模組</div>
+                <div class="val">
+                  <span class="dossier-pill">門診醫令系統</span><span class="dossier-pill">藥局系統</span>
+                  <span class="dossier-pill">批價系統</span><span class="dossier-pill">櫃檯掛號系統</span>
+                  <span class="dossier-pill">門診申報系統</span><span class="dossier-pill">病歷系統</span>
+                </div>
+              </div>
+              <div class="dossier-detail-field">
+                <div class="lbl">介接系統</div>
+                <div class="val"><span class="dossier-pill">健保IC卡每日上傳</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="dossier-caption">介面示意圖(列表模式)—— 左側清單挑一所,右側直接看該所完整問卷內容</div>
+        </div>
+
+        <h4 class="subhead">四階段上線優先序</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">P0 · Day 1</span></td><td>門診醫令、批價掛號(含身分優免自動判別)、門診申報(簡化)、健保 IC 卡每日上傳 —— 缺一項全所停擺</td></tr>
+          <tr><td><span class="scope-pill scope-price">P1 · 上線後 1-2 月</span></td><td>藥局系統、檢驗報告自動回傳(取代人工 Excel 匯入)、雲端藥歷一鍵開啟、讀卡衝突解決方案</td></tr>
+          <tr><td><span class="scope-pill scope-logic">P2 · 上線後 3-6 月</span></td><td>成健/篩檢資格即時查詢(串國健署 API)、離線掛號看診(47% 有需求)、慢病個管防呆提醒</td></tr>
+          <tr><td><span class="scope-pill scope-ops">P3 · 依資源排序</span></td><td>電子病歷/電子處方箋、影像報告介接、戶政系統串接、傳染病通報介接</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>抓到不能後補的邊界案例：</b>約 10 間山地離島衛生所的部分負擔邏輯跟一般所不同(掛號費全免、自動帶代碼 007),
+          報告明確標注「系統設計階段需納入,不可後補」—— 這種例外規則如果等上線後才發現,代價會高很多。
+        </div>
+
+        <div class="tags">
+          <span class="tag">需求盤點</span>
+          <span class="tag">優先序排定</span>
+          <span class="tag">導入風險評估</span>
+          <span class="tag">問卷資料分析</span>
+          <span class="tag">互動比對工具</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>交叉驗證重複回覆：</b>36 份問卷回覆中有 2 組衛生所重複填寫(潮州、里港、萬丹各 2 筆),分析時交叉比對找出一致與矛盾之處,不是照單全收。</li>
+            <li><b>優先序不是憑感覺排的：</b>用「使用所數 × 法規強制性 × 缺了會不會停擺」三個維度交叉判斷,例如藥局系統雖然 72% 在用,但因為沒有一間收外院處方箋,模組範圍可以大幅簡化。</li>
+            <li><b>深度個案分析：</b>針對第一批合作的三間衛生所(麟洛、萬丹、來義)額外做逐所深度分析,標注每一項發現對 xHIS 開發的具體影響,不只是停留在統計數字。</li>
+            <li><b>遷移風險提前盤點：</b>列出操作習慣差異、資料遷移、山區部署、多廠商並存期、人員抗拒五類風險,並各自對應具體對策,而不是上線後才逐一踩坑。</li>
+            <li><b>比較上限設計：</b>比較模式最多同時選 4 所,超過就提示先移除一所——超過 4 欄的表格橫向資訊量會爆炸,反而不利閱讀跟決策。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部分析報告 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <!-- 專案：VAC 疫苗管理系統規劃方法論 -->
+    <details class="project strategy">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>VAC 疫苗管理系統 —— 從零建構的系統規劃方法論</h3>
+          <span class="proj-badge">策略 / 系統規劃</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">從一份操作手冊、一張流程圖、一份政府 API 規格書,拆解出 5 份模組化 PRD,而不是把文件內容直接照搬。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">功能域拆解</span><span class="tag">python-docx / pdfplumber</span><span class="tag">API 差異分析</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          有時候 PM 拿到的不是乾淨的需求文件,而是一堆原始素材 —— 舊系統操作手冊、手繪流程圖、政府 API 規格書。
+          規劃疫苗管理系統時,我先用程式把三份不同格式的文件內容萃取出來,再依「誰做、什麼時候做、多頻繁做」
+          三個維度把功能拆解、合併,最後產出 5 份界線清楚的 PRD 模組,而不是一份包山包海、誰都不想認領的巨型文件。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">素材萃取</span><span class="arrow">→</span>
+          <span class="step">功能域拆解</span><span class="arrow">→</span>
+          <span class="step">初版 9 模組</span><span class="arrow">→</span>
+          <span class="step">合併收斂為 5 份 PRD</span><span class="arrow">→</span>
+          <span class="step">對照官方 API 差異迭代</span>
+        </div>
+
+        <h4 class="subhead">拆解邏輯:三個維度定歸屬</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">VAC.Master</span></td><td>管理員低頻設定 —— 疫苗代碼、批號、公費身份別條件維護</td></tr>
+          <tr><td><span class="scope-pill scope-logic">VAC.Administer</span></td><td>護理師高頻日常作業 —— 施打當日資格核對與施打紀錄</td></tr>
+          <tr><td><span class="scope-pill scope-code">VAC.Record</span></td><td>行政查詢/補建 —— 事後管理、紀錄修正</td></tr>
+          <tr><td><span class="scope-pill scope-ops">VAC.NiisUpload</span></td><td>對外 API 介接 —— 技術邊界獨立,跟 CDC NIIS 系統對接</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>從 9 份收斂到 5 份：</b>初版依功能細節拆成 9 份模組,過於瑣碎;用「角色相同就合併」(批號維護跟疫苗代碼維護都是管理員做)
+          與「技術邊界獨立才分開」(NIIS 對接複雜度高,獨立成一份)兩個原則收斂,避免 RD 開發時模組邊界互相打架。
+        </div>
+
+        <h4 class="subhead">案例:對照官方 API 規格書抓出的缺漏</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-code">胎別欄位</span></td><td>原 PRD/UI 完全缺漏 —— 補上兒童 Tab 下拉選單</td></tr>
+          <tr><td><span class="scope-pill scope-code">同胎次序欄位</span></td><td>原本誤植混淆為「出生序」—— 欄位名稱與說明重新釐清分離</td></tr>
+          <tr><td><span class="scope-pill scope-code">疫苗劑次欄位</span></td><td>原本沒有顯示在醫令列 —— 補上專屬標籤</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>提早在紙上抓到,而不是對接時才發現：</b>用 pdfplumber 逐頁比對 40 多頁的官方 NIIS API 規格書,
+          抓出 3 項 UI/PRD 版本沒發現的欄位缺漏,避免等到跟 CDC 系統實際對接測試時才手忙腳亂修改。
+        </div>
+
+        <div class="tags">
+          <span class="tag">功能域拆解</span>
+          <span class="tag">python-docx / pdfplumber</span>
+          <span class="tag">API 差異分析</span>
+          <span class="tag">命名慣例對齊</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>萃取工具依文件類型選用：</b>python-docx 讀取操作手冊與流程圖文件的段落結構,pdfplumber 逐頁萃取 PDF 規格書裡的表格與條款,比單純複製貼上更完整保留原始結構與細節。</li>
+            <li><b>命名慣例對齊既有系統：</b>參照既有 OPD.KOPD、OPD.OPDHL 的命名慣例,確立 VAC.{模組} 格式,讓新系統的文件體系跟既有系統一致,不會自成一套風格。</li>
+            <li><b>用 ui-preview 驗證三種真實情境：</b>產出互動 Demo 涵蓋成人有健保卡、嬰幼兒無健保卡、學童有健保卡接種 MMR 三種情境,提早驗證流程設計是否真的涵蓋得到邊界案例。</li>
+            <li><b>年齡定義的業務邏輯釐清：</b>過程中發現「兒童模式」原本用年齡自動判斷,但實際業務邏輯是「嬰幼兒 = 無健保卡」,跟年齡無關,及時修正避免規格建立在錯誤假設上。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部規劃文件 · 無公開 Demo</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 分類五：個人生產力工具                                        -->
+  <!-- ============================================================ -->
+  <section class="category subpanel" id="cat-personal">
+    <div class="category-head">
+      <span class="cat-dot personal"></span>
+      <h2>個人生產力工具</h2>
+      <span class="count">(2)</span>
+    </div>
+    <p class="category-note">只給自己用,用來加快日常工作節奏,不是給團隊或客戶使用的產品。</p>
+
+    <!-- 專案：PRD 規格問答機器人 -->
+    <details class="project personal">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>PRD 規格問答機器人(qa: / qac:)</h3>
+          <span class="proj-badge">個人工具 / AI 問答</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">下指令查詢 PRD、規格文件、健保官方文件,qac: 模式再加查前端程式碼,取代人工翻文件回覆規格問題。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">AI 問答技能</span><span class="tag">文件檢索</span><span class="tag">來源標注</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          RD 或其他同事常常會問「這個規格到底是什麼」「這個欄位是什麼意思」,PM 要回答就得重新翻 PRD、
+          對照 Data Node 定義、甚至查健保官方文件,一來一回很花時間,講得不夠精確還可能誤導 RD。
+          這是一套 AI 問答技能:下 <code>qa:</code> 或 <code>qac:</code> 指令,系統會自動判斷問題類型、
+          定位到正確文件、讀取內容後給出附來源出處的答案。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">判斷問題類型</span><span class="arrow">→</span>
+          <span class="step">關鍵字定位文件</span><span class="arrow">→</span>
+          <span class="step">讀取內容</span><span class="arrow">→</span>
+          <span class="step">附來源回答</span>
+        </div>
+
+        <h4 class="subhead">兩種模式</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-price">qa:</span></td><td>搜尋 PRD 文件、Data Node 欄位定義、健保官方文件(PDF)—— 適合查規格定義</td></tr>
+          <tr><td><span class="scope-pill scope-logic">qac:</span></td><td>在 qa: 的範圍上,額外搜尋前端原始碼(Vue/TS)—— 適合確認「前端實際上是怎麼做的」,並比對規格與實作是否一致</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>誠實回答,不編造：</b>每個答案都附上具體來源(第幾章節、哪份文件、哪一行程式碼);
+          文件沒寫清楚的地方,會明確說「Spec 未定義」,而不是憑印象回答。
+        </div>
+
+        <div class="tags">
+          <span class="tag">AI 問答技能</span>
+          <span class="tag">文件檢索</span>
+          <span class="tag">來源標注</span>
+          <span class="tag">前端程式碼比對</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>關鍵字路由表：</b>建立了一份對照表,把幾十個常見關鍵字直接對應到該查哪份文件,不用每次從頭大海撈針。</li>
+            <li><b>分層來源標注：</b>依來源類型(PRD / Data Node / 官方文件 / 前端程式碼)使用不同格式標注,方便追溯到原始出處。</li>
+            <li><b>版本優先序：</b>同一規格有多個版本文件時(例如稽核規則 v1/v2),內建規則會自動採用最新版本回答,不會答錯舊版。</li>
+            <li><b>qac: 雙軌回答：</b>先回答 PRD 規格,再補充對應的前端元件、狀態管理與 API 呼叫位置,並主動指出規格與實作之間的落差。</li>
+            <li><b>不確定就明說：</b>遇到文件沒有覆蓋到的細節,會清楚區分「依 spec 明確寫的」跟「依經驗推論的」,不會把推測講得像定論。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部技能 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="relation-connector">
+      <span class="bend"></span>
+      <span>同一套 qa: / qac: 技能,可以搭配 Jira 任務儀表板一起用來查證規格細節 ↓</span>
+    </div>
+
+    <!-- 專案：Jira 任務儀表板 -->
+    <details class="project personal">
+      <summary>
+        <div class="proj-summary-top">
+          <h3>Jira 任務儀表板</h3>
+          <span class="proj-badge">個人工具 / 生產力</span>
+          <span class="proj-chevron"></span>
+        </div>
+        <p class="proj-oneliner">即時連線 Jira 的互動網頁儀表板:依關鍵字規則自動分類、標記需回覆項目、Fix Version 篩選,草稿確認後直接送出留言。</p>
+        <div class="proj-tags-preview">
+          <span class="tag">Python / Flask</span><span class="tag">Jira REST API</span><span class="tag">規則式自動分類</span>
+        </div>
+      </summary>
+
+      <div class="proj-body">
+        <p class="card-desc">
+          手上的 Jira 票一多,光是搞清楚「哪些可以驗證了、哪些卡在等別人、該回什麼」就要花不少時間。
+          這是一個即時連線 Jira 的互動網頁儀表板:抓回任務後依關鍵字規則自動分類、標出「別人留言了但我還沒回」的項目,
+          草稿欄位可以直接編輯,滿意了按一下就送出留言到 Jira,不用再開瀏覽器分頁複製貼上。
+        </p>
+
+        <div class="pipeline">
+          <span class="step">即時抓取任務</span><span class="arrow">→</span>
+          <span class="step">依模組 + 規則自動分類</span><span class="arrow">→</span>
+          <span class="step">標記需回覆 / 逾期未動</span><span class="arrow">→</span>
+          <span class="step">草稿可編輯</span><span class="arrow">→</span>
+          <span class="step">一鍵送出留言</span>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-header">
+            <div>
+              <div class="mh-title">Jira 任務儀表板</div>
+              <div class="mh-sub">最後更新:2026-07-17 15:20</div>
+            </div>
+            <div class="mh-btns">
+              <span class="mh-btn">清除快取</span>
+              <span class="mh-btn">↻ 重新整理</span>
+            </div>
+          </div>
+          <div class="mockup-body">
+            <div class="mockup-jql">JQL: project = PTH and assignee = currentUser() and status not in (Closed, "Beta Func. Pass (PM in Dev)", Done) and labels not in (auto-generated) order by type</div>
+
+            <div class="mockup-jql" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-weight:700;color:#475569;">Fix Version:</span>
+              <span style="background:#eef2ff;color:#4338ca;padding:2px 8px;border-radius:4px;">☑ 啟用</span>
+              <span>PTH00</span><span style="background:#fff;border:1px solid #cbd5e1;padding:1px 8px;border-radius:4px;">012</span><span>H0</span>
+              <span style="color:#2563eb;">⇒ "PTH00012H0"</span>
+            </div>
+
+            <div class="mockup-stats">
+              <div class="mockup-stat"><div class="ms-num">66</div><div class="ms-label">全部</div></div>
+              <div class="mockup-stat highlight"><div class="ms-num">4</div><div class="ms-label">需回覆</div></div>
+              <div class="mockup-stat"><div class="ms-num">51</div><div class="ms-label">Alpha(待驗證)</div></div>
+              <div class="mockup-stat"><div class="ms-num">15</div><div class="ms-label">非 Alpha</div></div>
+              <div class="mockup-stat"><div class="ms-num">50</div><div class="ms-label">可幫回</div></div>
+              <div class="mockup-stat"><div class="ms-num">9</div><div class="ms-label">部分可</div></div>
+              <div class="mockup-stat"><div class="ms-num">5</div><div class="ms-label">不行</div></div>
+            </div>
+
+            <div class="mockup-modules">
+              <span class="mockup-tag all">全部</span>
+              <span class="mockup-tag">IC卡上傳 (15)</span>
+              <span class="mockup-tag">申報 (7)</span>
+              <span class="mockup-tag">批價 (19)</span>
+              <span class="mockup-tag">掛號 (3)</span>
+              <span class="mockup-tag">調劑 (6)</span>
+              <span class="mockup-tag">報表 (2)</span>
+              <span class="mockup-tag">門診 (7)</span>
+              <span class="mockup-tag">系統設定</span>
+              <span class="mockup-tag">其他 (7)</span>
+            </div>
+
+            <div class="mockup-table-scroll">
+              <table class="mockup-table">
+                <tr><th>票號</th><th>逾期</th><th>模組</th><th>功能</th><th>需要的動作</th><th>可幫回?</th><th>建議回覆草稿</th></tr>
+                <tr>
+                  <td class="mt-key">PTH-101</td>
+                  <td><span class="mt-badge" style="background:#fee2e2;color:#991b1b;">14 天未動</span></td>
+                  <td><span class="mt-mod">門診</span></td>
+                  <td>門診醫令系統 - 取消看診按鈕邏輯調整</td>
+                  <td>Stage 驗證</td>
+                  <td><span class="mt-ok">可</span></td>
+                  <td>已確認 PTH-101,將於 Stage 環境驗證。</td>
+                </tr>
+                <tr style="background:#fff7ed;">
+                  <td class="mt-key">PTH-104</td>
+                  <td><span class="mt-badge" style="background:#fef3c7;color:#92400e;">4 天未動</span></td>
+                  <td><span class="mt-mod">批價</span></td>
+                  <td>門診批價系統 - 身份設定交互 - pending by PTH-105</td>
+                  <td style="color:#dc2626;">[!] 需回覆</td>
+                  <td><span class="mt-ok">可</span></td>
+                  <td>收到,我來確認 PTH-104 的狀態,稍後回覆。</td>
+                </tr>
+                <tr>
+                  <td class="mt-key">PTH-822</td>
+                  <td><span class="mt-badge" style="background:#f3f4f6;color:#9ca3af;">1 天</span></td>
+                  <td><span class="mt-mod">調劑</span></td>
+                  <td>修正門診慢箋開立資格判斷邏輯</td>
+                  <td>需寫 spec</td>
+                  <td><span class="mt-badge" style="background:#fef3c7;color:#92400e;">部分可</span></td>
+                  <td style="color:#94a3b8;">輸入回覆草稿或建議行動…</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="mockup-caption">介面示意圖 —— 資料為示意用途,已替換為假票號與假內容,非真實資料</div>
+        </div>
+
+        <h4 class="subhead">自動分類規則(節錄)</h4>
+        <table class="scope-table">
+          <tr><td><span class="scope-pill scope-logic">Alpha 狀態</span></td><td>狀態為 Alpha Pass → 動作「Stage 驗證」,自動生成「已確認 XXX,將於 Stage 環境驗證」草稿</td></tr>
+          <tr><td><span class="scope-pill scope-ops">需回覆偵測</span></td><td>最新留言的作者不是自己 → 標記「需回覆」,排序時優先浮到最上面,同樣需回覆時再依逾期天數排序</td></tr>
+          <tr><td><span class="scope-pill scope-code">留言關鍵字</span></td><td>留言含「已修復/done/完成」→ 動作「確認並關閉」;含「請確認/麻煩確認」→ 動作「回覆確認」;含「by design/設計行為」→ 動作「確認 by design」</td></tr>
+          <tr><td><span class="scope-pill scope-price">標題關鍵字</span></td><td>標題含「spec/規格/規則」→ 動作「需寫 spec」,標記「部分可」;含「測試/驗證」且非以上情況 → 「等環境/人工驗」,標記「不行」</td></tr>
+        </table>
+
+        <div class="impact-line">
+          <b>把「翻文件」壓縮成「順稿子」：</b>常見情境(Alpha 待驗、已修復待關閉、對方在等回覆)自動生成草稿雛型,
+          不用每次都從零開始想怎麼回;真正需要查證規格細節的問題,再另外用 <code>qa:</code> / <code>qac:</code> 技能查文件輔助撰寫,兩者分工互補。
+        </div>
+
+        <div class="impact-line">
+          <b>近期更新:Fix Version 篩選：</b>新增一個開關,輸入版本號數字就能自動組成完整的 Fix Version(如
+          <code>PTH00012H0</code>),並正確插入到 JQL 的 <code>ORDER BY</code> 之前,不用自己手動改 JQL 字串、也不會不小心把條件插到錯的位置。
+        </div>
+
+        <div class="tags">
+          <span class="tag">Python / Flask</span>
+          <span class="tag">Jira REST API</span>
+          <span class="tag">規則式自動分類</span>
+          <span class="tag">本地快取</span>
+        </div>
+
+        <details class="tech-detail">
+          <summary>技術細節</summary>
+          <ul>
+            <li><b>編輯不遺失,防抖自動存檔：</b>手動調整過的分類或草稿內容,停止輸入 500 毫秒後才觸發存檔請求(debounce),避免每打一個字就打一次 API;重新整理頁面時會優先套用快取內容,不會被自動分類蓋掉。</li>
+            <li><b>需回覆的排序邏輯：</b>非 Alpha 任務先分成「需回覆」與否兩組,需回覆的排最前面,同一組內再依「逾期天數」由大到小排,確保最急迫的票永遠在畫面最上方。</li>
+            <li><b>功能模組比對表：</b>用「摘要關鍵字 → 模組」的對照表(例如提到「健保卡上傳」「送核」「補卡」歸類到 IC 卡上傳),依順序比對,兼顧準確度與好維護。</li>
+            <li><b>Fix Version 動態組字串：</b>輸入的版本號會自動組成 <code>PTH00{num}H0</code> 格式的完整版本字串,再用正規表達式找到 JQL 裡 <code>ORDER BY</code> 的位置,把篩選條件插在它前面,不會插錯位置導致整條 JQL 語法錯誤。</li>
+            <li><b>直接呼叫 Jira API 送出留言：</b>草稿確認後,前端呼叫後端 API,由後端組成 Jira 要求的 ADF(Atlassian Document Format)格式送出留言,並即時把「發送中 / 已發送 / 失敗原因」顯示在畫面上,不用手動複製貼上到瀏覽器分頁。</li>
+          </ul>
+        </details>
+
+        <div class="card-footer" style="margin-top:14px;">內部系統 · 無公開 Demo</div>
+      </div>
+    </details>
+
+    <div class="placeholder-card">+ 更多專案陸續上架中</div>
+  </section>
+
+  </div><!-- /#tab-portfolio -->
+
+  <!-- ============================================================ -->
+  <!-- 經歷區塊                                                      -->
+  <!-- ============================================================ -->
+  <section class="exp-section tab-panel" id="experience">
+    <h2 class="exp-title">經歷</h2>
+
+    <p class="exp-subhead">工作經歷</p>
+    <div class="timeline">
+
+      <div class="timeline-item current">
+        <span class="timeline-dot"></span>
+        <div class="timeline-header">
+          <span class="timeline-role">產品經理 <span class="now-pill">現職</span></span>
+          <span class="timeline-date">2023 — 至今 · 約 3 年</span>
+        </div>
+        <div class="timeline-company">華碩 AICS(ASUS AICS)· xHIS 醫療資訊系統</div>
+        <div class="timeline-body">
+          <ul>
+            <li>負責 xHIS 醫療資訊系統的 PRD 規劃,涵蓋健保申報邏輯、計價規則、跨機關法規合規等核心規格</li>
+            <li>自研一整套 PRD 生產力 AI Skills 工具鏈(寫作/驗證/資料設計/發布),並建立雙軌驗證法確保計價邏輯正確</li>
+            <li>打造政府醫療法規每日自動監控系統,串接下游自動修復(xSwift)與測試生成(xGovTrial)</li>
+            <li>開發跨院所協作工具(Bug 回報系統、LINE AI 助理 Bobi),服務對象橫跨內部團隊與合作衛生所/診所</li>
+            <li>主導屏東縣衛生所需求盤點分析,產出分階段導入策略;規劃 VAC 疫苗管理系統等新模組的功能架構</li>
+          </ul>
+          <p class="timeline-note">完整專案內容參見上方各分類卡片。</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-header">
+          <span class="timeline-role">資深系統分析師</span>
+          <span class="timeline-date">2019.08 — 2023</span>
+        </div>
+        <div class="timeline-company">新光吳火獅紀念醫院</div>
+        <div class="timeline-body">
+          <ul>
+            <li><b>資訊轉置 - HIS：</b>門診/急診/住院保險申報系統、抽審申覆爭審、健保 IC 卡上傳、健保獎勵上傳方案</li>
+            <li><b>資訊轉置 - 指標開發：</b>提報指標與營運指標建立 Cube,使用者訪談確認需求,PowerBI 圖形化介面設計</li>
+            <li><b>資訊轉置 - SAP CO：</b>與使用者確認需求後規劃系統流程,測試系統與資料正確性</li>
+            <li><b>HIS/NIS 系統：</b>全院 HIS/NIS 系統需求分析與規劃,健保抽審/申覆/爭審需求規劃</li>
+            <li><b>報表與指標：</b>全院報表分析開發、評鑑與認證所需的緊急報表、醫院評鑑指標訪談與開發、新指標需求架構規劃</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-header">
+          <span class="timeline-role">資訊工程師 / 資深程式設計師</span>
+          <span class="timeline-date">2013.07 — 2019.08</span>
+        </div>
+        <div class="timeline-company">和信治癌中心醫院</div>
+        <div class="timeline-body">
+          <ul>
+            <li>主要負責門診申報及住院申報系統;健保局不定時修改規則時,常牽動前後端系統一起修改,需與跨部門使用者密切溝通</li>
+            <li>接手過掛號系統、批價系統及外包 RT 系統導入</li>
+            <li>使用 SAS 進行資料分析與管理(資料庫、授權、EG、Lasr 部分)</li>
+            <li>協助部門專案規劃流程圖繪製</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="exp-subhead">學歷</p>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-degree">資訊管理系 · 碩士</div>
+        <div class="edu-school">國立臺北護理健康大學</div>
+        <div class="edu-date">2011 — 2013</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-degree">資訊科技系 · 學士</div>
+        <div class="edu-school">德明財經科技大學</div>
+        <div class="edu-date">2007 — 2011</div>
+      </div>
+    </div>
+
+    <p class="exp-subhead">技能</p>
+    <div class="skill-group">
+      <p class="skill-group-label">程式語言 & 資料庫</p>
+      <div class="tags">
+        <span class="tag">Python</span><span class="tag">Delphi</span><span class="tag">Visual Basic</span><span class="tag">C#</span>
+        <span class="tag">Oracle</span><span class="tag">SQL Server</span><span class="tag">SQL / MySQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-label">資料分析 & 視覺化</p>
+      <div class="tags">
+        <span class="tag">SAS</span><span class="tag">SPSS</span><span class="tag">DAX</span><span class="tag">PowerBI</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-label">AI 與自動化(近年主力)</p>
+      <div class="tags">
+        <span class="tag">Custom AI Skills</span><span class="tag">Gemini / Groq API</span><span class="tag">Flask</span>
+        <span class="tag">GitHub Actions</span><span class="tag">LINE Messaging API</span><span class="tag">Jira REST API</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-label">語言</p>
+      <div class="tags">
+        <span class="tag">English — 中階</span><span class="tag">台語 — 中階</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Monica · Built with care, updated by hand.
+  </footer>
+
+</div>
+<script>
+  const tabButtons = document.querySelectorAll('.toc button');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+  const subButtons = document.querySelectorAll('.subnav button');
+  const subPanels = document.querySelectorAll('.subpanel');
+
+  function activateTab(targetId, scrollUp) {
+    tabPanels.forEach(p => p.classList.toggle('active', p.id === targetId));
+    tabButtons.forEach(b => b.classList.toggle('active', b.dataset.target === targetId));
+    if (scrollUp) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function activateSubtab(targetId) {
+    subPanels.forEach(p => p.classList.toggle('active', p.id === targetId));
+    subButtons.forEach(b => b.classList.toggle('active', b.dataset.subtarget === targetId));
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.target, true));
+  });
+
+  subButtons.forEach(btn => {
+    btn.addEventListener('click', () => activateSubtab(btn.dataset.subtarget));
+  });
+</script>
+
+</body>
+</html>
